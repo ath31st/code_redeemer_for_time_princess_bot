@@ -1,9 +1,15 @@
 package bot.farm.redeemer.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 
 @Service
 @RequiredArgsConstructor
@@ -27,4 +33,11 @@ public class MessageService {
     return sendMessage;
   }
 
+  public SendMessage createNewsMessage(String chatId, String message) {
+    SendMessage sendMessage = createMessage(chatId, message);
+    InlineKeyboardMarkup inlineKeyboardMarkup =
+        buttonService.setInlineKeyMarkup(buttonService.createInlineDeleteButton());
+    sendMessage.setReplyMarkup(inlineKeyboardMarkup);
+    return sendMessage;
+  }
 }

@@ -1,5 +1,6 @@
 package bot.farm.redeemer.service;
 
+import bot.farm.redeemer.util.Link;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -14,10 +15,20 @@ public class ButtonService {
     List<InlineKeyboardButton> inlineKeyboardButtonsRow1 = new ArrayList<>();
 
     InlineKeyboardButton inlineKeyboardButton1 = new InlineKeyboardButton();
-    inlineKeyboardButton1.setText("INSERT TEXT");
-    inlineKeyboardButton1.setCallbackData("/INSERT LINK");
+    inlineKeyboardButton1.setText("Ввести промокод");
+    inlineKeyboardButton1.setCallbackData(Link.INSERT_PROMO.value);
+
+    InlineKeyboardButton inlineKeyboardButton2 = new InlineKeyboardButton();
+    inlineKeyboardButton2.setText("Ввести IGG ID");
+    inlineKeyboardButton2.setCallbackData(Link.INSERT_IGG_ID.value);
+
+    InlineKeyboardButton inlineKeyboardButton3 = new InlineKeyboardButton();
+    inlineKeyboardButton3.setText("Список IGG ID");
+    inlineKeyboardButton3.setCallbackData(Link.LIST_IGG_ID.value);
 
     inlineKeyboardButtonsRow1.add(inlineKeyboardButton1);
+    inlineKeyboardButtonsRow1.add(inlineKeyboardButton2);
+    inlineKeyboardButtonsRow1.add(inlineKeyboardButton3);
 
     inlineKeyButtonList.add(inlineKeyboardButtonsRow1);
     return inlineKeyButtonList;
@@ -27,6 +38,20 @@ public class ButtonService {
     InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
     inlineKeyboardMarkup.setKeyboard(inlineList);
     return inlineKeyboardMarkup;
+  }
+
+  public List<List<InlineKeyboardButton>> createInlineDeleteButton() {
+    final List<List<InlineKeyboardButton>> inlineKeyButtonList = new ArrayList<>();
+    final List<InlineKeyboardButton> inlineKeyboardButtonsRow1 = new ArrayList<>();
+
+    InlineKeyboardButton inlineKeyboardButton1 = new InlineKeyboardButton();
+    inlineKeyboardButton1.setText("\uD83D\uDEAB " + "Удалить IGG ID из списка");
+    inlineKeyboardButton1.setCallbackData(Link.DELETE_IGG_ID.value);
+
+    inlineKeyboardButtonsRow1.add(inlineKeyboardButton1);
+
+    inlineKeyButtonList.add(inlineKeyboardButtonsRow1);
+    return inlineKeyButtonList;
   }
 
 }
