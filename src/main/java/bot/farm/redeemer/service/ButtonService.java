@@ -9,18 +9,17 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 
 @Service
 public class ButtonService {
-
   public List<List<InlineKeyboardButton>> createInlineButton() {
     List<List<InlineKeyboardButton>> inlineKeyButtonList = new ArrayList<>();
     List<InlineKeyboardButton> inlineKeyboardButtonsRow1 = new ArrayList<>();
 
     InlineKeyboardButton inlineKeyboardButton1 = new InlineKeyboardButton();
     inlineKeyboardButton1.setText("Ввести промокод");
-    inlineKeyboardButton1.setCallbackData(Link.INSERT_PROMO.value);
+    inlineKeyboardButton1.setCallbackData(Link.INPUT_PROMO.value);
 
     InlineKeyboardButton inlineKeyboardButton2 = new InlineKeyboardButton();
     inlineKeyboardButton2.setText("Ввести IGG ID");
-    inlineKeyboardButton2.setCallbackData(Link.INSERT_IGG_ID.value);
+    inlineKeyboardButton2.setCallbackData(Link.INPUT_IGG_ID.value);
 
     InlineKeyboardButton inlineKeyboardButton3 = new InlineKeyboardButton();
     inlineKeyboardButton3.setText("Список IGG ID");
@@ -45,7 +44,7 @@ public class ButtonService {
     final List<InlineKeyboardButton> inlineKeyboardButtonsRow1 = new ArrayList<>();
 
     InlineKeyboardButton inlineKeyboardButton1 = new InlineKeyboardButton();
-    inlineKeyboardButton1.setText("\uD83D\uDEAB " + "Удалить IGG ID из списка");
+    inlineKeyboardButton1.setText("⌧ " + "Перейти в режим удаления IGG ID");
     inlineKeyboardButton1.setCallbackData(Link.DELETE_IGG_ID.value);
 
     inlineKeyboardButtonsRow1.add(inlineKeyboardButton1);
