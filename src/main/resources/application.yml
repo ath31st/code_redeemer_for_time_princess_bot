@@ -1,0 +1,10 @@
+server:
+  port: 8088
+
+telegram:
+  bot:
+    name: YOUR_BOT_NAME
+    token: YOUR_BOT_TOKEN
+
+  #this is string for environment variables format
+  #telegram.bot.name=NAME;telegram.bot.token=TOKEN
