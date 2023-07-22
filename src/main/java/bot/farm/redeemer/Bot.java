@@ -1,6 +1,6 @@
 package bot.farm.redeemer;
 
-import bot.farm.redeemer.service.BotService;
+import bot.farm.redeemer.service.SwitchService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,7 +18,7 @@ public class Bot extends TelegramLongPollingBot {
   private String botName;
   @Value("${telegram.bot.token}")
   private String botToken;
-  private final BotService botService;
+  private final SwitchService switchService;
 
   @Override
   public String getBotUsername() {
@@ -34,11 +34,11 @@ public class Bot extends TelegramLongPollingBot {
   public void onUpdateReceived(Update update) {
     SendMessage sendMsg = null;
     if (update.hasMessage() && update.getMessage().hasText()) {
-      sendMsg = botService.handleMessage(update.getMessage());
+      sendMsg = switchService.handleMessage(update.getMessage());
     }
 
     if (update.hasCallbackQuery()) {
-      sendMsg = botService.handleCallback(update.getCallbackQuery());
+      sendMsg = switchService.handleCallback(update.getCallbackQuery());
     }
 
     try {

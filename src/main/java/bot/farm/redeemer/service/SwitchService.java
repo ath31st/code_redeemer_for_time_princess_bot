@@ -10,26 +10,38 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 
 @Service
 @RequiredArgsConstructor
-public class BotService {
+public class SwitchService {
   private final MessageService messageService;
   private UserState state = UserState.DEFAULT;
 
   public SendMessage handleMessage(Message message) {
+    SendMessage sendMessage;
     final String chatId = String.valueOf(message.getChatId());
     final String text = message.getText();
 
     switch (state) {
       case INPUT_ID -> {
 
-        return messageService.createMessage(chatId, "Выберите действие:");
+        state = UserState.DEFAULT;
+        sendMessage = messageService.createMessage(chatId, "Результаты действия");
       }
-      default -> {
-        return messageService.createMenuMessage(chatId, "Выберите действие:");
+      case INPUT_PROMO -> {
+
+        state = UserState.DEFAULT;
+        sendMessage = messageService.createMessage(chatId, "Результаты действия");
       }
+      case DELETE_ID -> {
+
+        state = UserState.DEFAULT;
+        sendMessage = messageService.createMessage(chatId, "Результаты действия");
+      }
+      default -> sendMessage = messageService.createMenuMessage(chatId, "Выберите действие:");
     }
+    return sendMessage;
   }
 
   public SendMessage handleCallback(CallbackQuery callback) {
+    SendMessage sendMessage;
     Message message = callback.getMessage();
     String chatId = String.valueOf(callback.getMessage().getChatId());
     final String text = callback.getData();
@@ -38,26 +50,27 @@ public class BotService {
     switch (text) {
       case "/input_promo" -> {
         state = UserState.INPUT_PROMO;
-        return messageService.createMessage(chatId,
+        sendMessage = messageService.createMessage(chatId,
             "Введите промокод для активации на аккаунты из списка");
       }
       case "/input_igg_id" -> {
         state = UserState.INPUT_ID;
-        return messageService.createMessage(chatId,
+        sendMessage = messageService.createMessage(chatId,
             "Введите ID, которые нужно добавить. ID должны быть разделены запятыми. Пробелы роли не играют.");
       }
       case "/list_igg_id" -> {
-        return messageService.createListMessageWithDeleteMenuButton(chatId, List.of("1", "23"));
+        sendMessage = messageService.createListMessageWithDeleteMenuButton(chatId, List.of("1", "23"));
       }
       case "/delete_igg_id" -> {
         state = UserState.DELETE_ID;
-        return messageService.createMessage(chatId,
+        sendMessage = messageService.createMessage(chatId,
             "Введите ID, которые нужно удалить. ID должны быть разделены запятыми. Пробелы роли не играют.");
       }
       default -> {
         state = UserState.DEFAULT;
-        return messageService.createMenuMessage(chatId, "Выберите действие:");
+        sendMessage = messageService.createMenuMessage(chatId, "Выберите действие:");
       }
     }
+    return sendMessage;
   }
 }
