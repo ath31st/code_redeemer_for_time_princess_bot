@@ -45,9 +45,15 @@ public class SwitchService {
         }
       }
       case DELETE_ID -> {
-
-        state = UserState.DEFAULT;
-        sendMessage = messageService.createMessage(chatId, "Результаты действия");
+        String response;
+        try {
+          response = iggAccountService.deleteAccounts(text);
+        } catch (IggAccountException e) {
+          response = e.getMessage();
+        } finally {
+          state = UserState.DEFAULT;
+        }
+        sendMessage = messageService.createMessage(chatId, response);
       }
       default -> sendMessage = messageService.createMenuMessage(chatId, "Выберите действие:");
     }

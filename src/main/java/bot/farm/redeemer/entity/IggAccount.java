@@ -15,4 +15,9 @@ public class IggAccount {
   @Id
   @Column(name = "igg_id", nullable = false)
   private Long iggId;
+
+  @Override
+  public String toString() {
+    return String.valueOf(iggId);
+  }
 }
