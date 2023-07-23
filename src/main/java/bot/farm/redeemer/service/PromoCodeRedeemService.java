@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -28,8 +29,8 @@ public class PromoCodeRedeemService {
   private static final String URL = "https://dut.igg.com/event/code";
 
   public String redeemPromoCode(String promoCode, List<IggAccount> accounts) {
-    List<Long> activatedIds = new ArrayList<>();
-    Map<Long, String> othersIds = new HashMap<>();
+    List<String> activatedIds = new ArrayList<>();
+    Map<String, String> othersIds = new HashMap<>();
 
     try (CloseableHttpClient httpclient = HttpClients.createDefault()) {
       HttpPost httpPost = new HttpPost(URL);
@@ -51,9 +52,9 @@ public class PromoCodeRedeemService {
         ApiResponse apiResponse = objectMapper.readValue(responseString, ApiResponse.class);
 
         if (apiResponse.code() != 0) {
-          othersIds.put(ia.getIggId(), apiResponse.msg());
+          othersIds.put(String.valueOf(ia.getIggId()), apiResponse.msg());
         } else {
-          activatedIds.add(ia.getIggId());
+          activatedIds.add(String.valueOf(ia.getIggId()));
         }
 
         // Не забываем освободить ресурсы
@@ -63,8 +64,33 @@ public class PromoCodeRedeemService {
     } catch (IOException e) {
       e.printStackTrace();
     }
-    return " ";
+    return prepareResponseAfterRedeeming(activatedIds, othersIds);
   }
 
+  private String prepareResponseAfterRedeeming(List<String> activated, Map<String, String> others) {
+    String response = null;
+    if (!activated.isEmpty()) {
+      response = "Промокод был активирован на следующие IGG ID:\n"
+          + String.join("\n", activated);
+    }
 
+    if (!others.isEmpty() && response != null) {
+      response += " Промокод не был применен к следующим аккаунтам по причинам:\n"
+          + others.entrySet()
+          .stream()
+          .map(e -> e.getKey() + ": " + e.getValue())
+          .collect(Collectors.joining("\n"));
+    } else if (!others.isEmpty()) {
+      response = "Промокод не был применен к следующим аккаунтам по причинам:\n"
+          + others.entrySet()
+          .stream()
+          .map(e -> e.getKey() + ": " + e.getValue())
+          .collect(Collectors.joining("\n"));
+    }
+
+    if (activated.isEmpty() && others.isEmpty()) {
+      response = "В базе данных отсутствуют IGG ID. Промокод не был применен.";
+    }
+    return response;
+  }
 }
