@@ -1,10 +1,22 @@
 server:
-  port: 8088
+  port: 7990
 
 telegram:
   bot:
     name: YOUR_BOT_NAME
     token: YOUR_BOT_TOKEN
+
+spring:
+  datasource:
+    url: jdbc:sqlite:./time_princess.db
+    driver-class-name: org.sqlite.JDBC
+    username: admin
+    password: admin
+
+  jpa:
+    database-platform: org.sqlite.hibernate.dialect.SQLiteDialect
+    hibernate:
+      ddl-auto: update
 
   #this is string for environment variables format
   #telegram.bot.name=NAME;telegram.bot.token=TOKEN
