@@ -1,8 +1,8 @@
 package bot.farm.redeemer.service;
 
+import bot.farm.redeemer.exception.IggAccountException;
 import bot.farm.redeemer.exception.PromoCodeException;
 import bot.farm.redeemer.util.UserState;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -14,6 +14,7 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 public class SwitchService {
   private final MessageService messageService;
   private final PromoCodeService promoCodeService;
+  private final IggAccountService iggAccountService;
   private UserState state = UserState.DEFAULT;
 
   public SendMessage handleMessage(Message message) {
@@ -23,8 +24,15 @@ public class SwitchService {
 
     switch (state) {
       case INPUT_ID -> {
-        state = UserState.DEFAULT;
-        sendMessage = messageService.createMessage(chatId, "Результаты действия");
+        String response;
+        try {
+          response = iggAccountService.saveAccounts(text);
+        } catch (IggAccountException e) {
+          response = e.getMessage();
+        } finally {
+          state = UserState.DEFAULT;
+        }
+        sendMessage = messageService.createMessage(chatId, response);
       }
       case INPUT_PROMO -> {
         try {
@@ -62,15 +70,16 @@ public class SwitchService {
       case "/input_igg_id" -> {
         state = UserState.INPUT_ID;
         sendMessage = messageService.createMessage(chatId,
-            "Введите ID, которые нужно добавить. ID должны быть разделены запятыми. Пробелы роли не играют.");
+            "Введите ID, которые нужно добавить. "
+                + "ID должны быть разделены запятыми. Пробелы роли не играют.");
       }
-      case "/list_igg_id" -> {
-        sendMessage = messageService.createListMessageWithDeleteMenuButton(chatId, List.of("1", "23"));
-      }
+      case "/list_igg_id" -> sendMessage = messageService.createListMessageWithDeleteMenuButton(
+          chatId, iggAccountService.getAccounts());
       case "/delete_igg_id" -> {
         state = UserState.DELETE_ID;
         sendMessage = messageService.createMessage(chatId,
-            "Введите ID, которые нужно удалить. ID должны быть разделены запятыми. Пробелы роли не играют.");
+            "Введите ID, которые нужно удалить. "
+                + "ID должны быть разделены запятыми. Пробелы роли не играют.");
       }
       default -> {
         state = UserState.DEFAULT;

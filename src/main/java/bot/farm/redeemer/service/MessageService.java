@@ -1,5 +1,6 @@
 package bot.farm.redeemer.service;
 
+import bot.farm.redeemer.entity.IggAccount;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,12 +24,14 @@ public class MessageService {
   public SendMessage createMenuMessage(String chatId, String message) {
 
     SendMessage sendMessage = createMessage(chatId, message);
-    InlineKeyboardMarkup inlineKeyboardMarkup = buttonService.setInlineKeyMarkup(buttonService.createInlineButton());
+    InlineKeyboardMarkup inlineKeyboardMarkup
+        = buttonService.setInlineKeyMarkup(buttonService.createInlineButton());
     sendMessage.setReplyMarkup(inlineKeyboardMarkup);
     return sendMessage;
   }
 
-  public SendMessage createListMessageWithDeleteMenuButton(String chatId, List<String> listIggIds) {
+  public SendMessage createListMessageWithDeleteMenuButton(
+      String chatId, List<IggAccount> listIggIds) {
     SendMessage sendMessage = createMessage(chatId, listIggIds.toString());
     InlineKeyboardMarkup inlineKeyboardMarkup =
         buttonService.setInlineKeyMarkup(buttonService.createInlineDeleteButton());
