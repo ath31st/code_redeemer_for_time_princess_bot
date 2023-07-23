@@ -11,11 +11,11 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
+@Setter
+@Getter
 @Table(name = "promo_codes")
 public class PromoCode {
   @Id
-  @Setter
-  @Getter
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "promo_code_id", nullable = false)
   private Long id;

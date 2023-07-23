@@ -12,6 +12,7 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 @RequiredArgsConstructor
 public class SwitchService {
   private final MessageService messageService;
+  private final PromoCodeService promoCodeService;
   private UserState state = UserState.DEFAULT;
 
   public SendMessage handleMessage(Message message) {
@@ -21,14 +22,18 @@ public class SwitchService {
 
     switch (state) {
       case INPUT_ID -> {
-
         state = UserState.DEFAULT;
         sendMessage = messageService.createMessage(chatId, "Результаты действия");
       }
       case INPUT_PROMO -> {
-
+        if (promoCodeService.checkExistsPromoCode(text)) {
+          sendMessage = messageService.createMessage(chatId,
+              "Такой промокод уже есть в базе данных и был применен на аккаунты");
+        } else {
+          promoCodeService.savePromoCode(text);
+          sendMessage = messageService.createMessage(chatId, "Результаты действия");
+        }
         state = UserState.DEFAULT;
-        sendMessage = messageService.createMessage(chatId, "Результаты действия");
       }
       case DELETE_ID -> {
 
