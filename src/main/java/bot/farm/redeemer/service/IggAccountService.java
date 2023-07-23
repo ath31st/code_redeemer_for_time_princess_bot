@@ -31,11 +31,7 @@ public class IggAccountService {
       }
     }
 
-    String response = "Были добавленые следующие IGG ID: " + String.join(", ", added) + ".";
-    if (!exists.isEmpty()) {
-      response += " В базе данных уже находятся: " + String.join(", ", exists) + ".";
-    }
-    return response;
+    return prepareResponse(added, exists);
   }
 
   public List<IggAccount> getAccounts() {
@@ -52,5 +48,24 @@ public class IggAccountService {
         .filter(s -> s.matches(RegExpression.IGG_ID))
         .map(Long::parseLong)
         .collect(Collectors.toSet());
+  }
+
+  private String prepareResponse(List<String> added, List<String> exists) {
+    String response = null;
+    if (!added.isEmpty()) {
+      response = "Были добавленые следующие IGG ID: " + String.join(", ", added) + ".";
+    }
+
+    if (!exists.isEmpty() && response != null) {
+      response += " В базе данных уже находятся: " + String.join(", ", exists) + ".";
+    } else if (!exists.isEmpty()) {
+      response = "В базе данных уже находятся: " + String.join(", ", exists) + ".";
+    }
+
+    if (added.isEmpty() && exists.isEmpty()) {
+      response = "Введенные IGG ID не были добавлены в базу данных. "
+          + "Проверьте формат ввода, допускаются числа от 2 до 18 знаков";
+    }
+    return response;
   }
 }
