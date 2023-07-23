@@ -15,6 +15,7 @@ public class SwitchService {
   private final MessageService messageService;
   private final PromoCodeService promoCodeService;
   private final IggAccountService iggAccountService;
+  private final PromoCodeRedeemService promoCodeRedeemService;
   private UserState state = UserState.DEFAULT;
 
   public SendMessage handleMessage(Message message) {
@@ -36,8 +37,9 @@ public class SwitchService {
       }
       case INPUT_PROMO -> {
         try {
-          promoCodeService.savePromoCode(text);
-          sendMessage = messageService.createMessage(chatId, "Результаты действия");
+          //promoCodeService.savePromoCode(text);
+          String response = promoCodeRedeemService.redeemPromoCode(text, iggAccountService.getAccounts());
+          sendMessage = messageService.createMessage(chatId, response);
         } catch (PromoCodeException e) {
           sendMessage = messageService.createMessage(chatId, e.getMessage());
         } finally {
