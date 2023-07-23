@@ -1,5 +1,6 @@
 package bot.farm.redeemer.service;
 
+import bot.farm.redeemer.exception.PromoCodeException;
 import bot.farm.redeemer.util.UserState;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -26,14 +27,14 @@ public class SwitchService {
         sendMessage = messageService.createMessage(chatId, "Результаты действия");
       }
       case INPUT_PROMO -> {
-        if (promoCodeService.checkExistsPromoCode(text)) {
-          sendMessage = messageService.createMessage(chatId,
-              "Такой промокод уже есть в базе данных и был применен на аккаунты");
-        } else {
+        try {
           promoCodeService.savePromoCode(text);
           sendMessage = messageService.createMessage(chatId, "Результаты действия");
+        } catch (PromoCodeException e) {
+          sendMessage = messageService.createMessage(chatId, e.getMessage());
+        } finally {
+          state = UserState.DEFAULT;
         }
-        state = UserState.DEFAULT;
       }
       case DELETE_ID -> {
 
