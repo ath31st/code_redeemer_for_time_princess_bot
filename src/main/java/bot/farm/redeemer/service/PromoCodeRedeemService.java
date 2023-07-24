@@ -32,6 +32,7 @@ public class PromoCodeRedeemService {
   public String redeemPromoCode(String promoCode, List<IggAccount> accounts) {
     List<String> activatedIds = new ArrayList<>();
     Map<String, String> othersIds = new HashMap<>();
+    String trouble = "";
 
     try (CloseableHttpClient httpclient = HttpClients.createDefault()) {
       HttpPost httpPost = new HttpPost(URL);
@@ -53,10 +54,19 @@ public class PromoCodeRedeemService {
         ApiResponse apiResponse = objectMapper.readValue(responseString, ApiResponse.class);
 
         // Если промокод истек или уже был применен на аккаунты, то цикл завершается досрочно
-        if (apiResponse.msg().endsWith("[-54]") || apiResponse.msg().endsWith("[-57]")) {
+        if (apiResponse.msg().endsWith("[-54]")
+            || apiResponse.msg().endsWith("[-57]")
+            || apiResponse.msg().endsWith("[-51]")) {
           activatedIds.clear();
           othersIds.clear();
           promoCodeService.savePromoCode(promoCode);
+          if (apiResponse.msg().endsWith("[-51]")) {
+            trouble = "Такой промокод не существует";
+          } else if (apiResponse.msg().endsWith("[-57]")) {
+            trouble = "Время действия промокода истекло";
+          } else {
+            trouble = "Промокод уже был применен на аккаунты из списка";
+          }
           break;
         }
 
@@ -73,10 +83,11 @@ public class PromoCodeRedeemService {
     } catch (IOException e) {
       e.printStackTrace();
     }
-    return prepareResponseAfterRedeeming(activatedIds, othersIds);
+    return prepareResponseAfterRedeeming(activatedIds, othersIds, trouble);
   }
 
-  private String prepareResponseAfterRedeeming(List<String> activated, Map<String, String> others) {
+  private String prepareResponseAfterRedeeming(
+      List<String> activated, Map<String, String> others, String trouble) {
     String response = null;
     if (!activated.isEmpty()) {
       response = "Промокод был активирован на следующие IGG ID:\n"
@@ -98,11 +109,7 @@ public class PromoCodeRedeemService {
     }
 
     if (activated.isEmpty() && others.isEmpty()) {
-      response = """
-          Применение промокода завершено досрочно по одной из причин:\s
-          1) В базе данных отсутствуют IGG ID.\s
-          2) Время действия прмокода истекло.\s
-          3) Промокод был применен на аккаунты из списка.""";
+      response = "Применение промокода завершено досрочно по причине:\n" + trouble;
     }
     return response;
   }

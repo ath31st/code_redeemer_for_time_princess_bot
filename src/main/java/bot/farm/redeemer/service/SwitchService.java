@@ -25,7 +25,6 @@ public class SwitchService {
     final String chatId = String.valueOf(message.getChatId());
     final String text = message.getText();
 
-    //if () {
     switch (state) {
       case INPUT_ID -> {
         String response;
