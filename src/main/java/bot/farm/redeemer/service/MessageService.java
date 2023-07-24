@@ -23,10 +23,17 @@ public class MessageService {
   }
 
   public SendMessage createMenuMessage(String chatId, String message) {
-
     SendMessage sendMessage = createMessage(chatId, message);
     InlineKeyboardMarkup inlineKeyboardMarkup
         = buttonService.setInlineKeyMarkup(buttonService.createInlineButton());
+    sendMessage.setReplyMarkup(inlineKeyboardMarkup);
+    return sendMessage;
+  }
+
+  public SendMessage createShortMenuMessage(String chatId, String message) {
+    SendMessage sendMessage = createMessage(chatId, message);
+    InlineKeyboardMarkup inlineKeyboardMarkup
+        = buttonService.setInlineKeyMarkup(buttonService.createInlineShortMenuButton());
     sendMessage.setReplyMarkup(inlineKeyboardMarkup);
     return sendMessage;
   }

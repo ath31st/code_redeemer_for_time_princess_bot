@@ -25,47 +25,46 @@ public class SwitchService {
     final String chatId = String.valueOf(message.getChatId());
     final String text = message.getText();
 
-    if (idSetReader.getIdSet().contains(message.getChatId())) {
-      switch (state) {
-        case INPUT_ID -> {
-          String response;
-          try {
-            response = iggAccountService.saveAccounts(text);
-          } catch (IggAccountException e) {
-            response = e.getMessage();
-          } finally {
-            state = UserState.DEFAULT;
-          }
-          sendMessage = messageService.createMessage(chatId, response);
+    //if () {
+    switch (state) {
+      case INPUT_ID -> {
+        String response;
+        try {
+          response = iggAccountService.saveAccounts(text);
+        } catch (IggAccountException e) {
+          response = e.getMessage();
+        } finally {
+          state = UserState.DEFAULT;
         }
-        case INPUT_PROMO -> {
-          try {
-            promoCodeService.checkCorrectPromoCode(text);
-            promoCodeService.checkExistsPromoCode(text);
-            String response = promoCodeRedeemService.redeemPromoCode(
-                text, iggAccountService.getAccounts());
-            sendMessage = messageService.createMessage(chatId, response);
-          } catch (PromoCodeException e) {
-            sendMessage = messageService.createMessage(chatId, e.getMessage());
-          } finally {
-            state = UserState.DEFAULT;
-          }
-        }
-        case DELETE_ID -> {
-          String response;
-          try {
-            response = iggAccountService.deleteAccounts(text);
-          } catch (IggAccountException e) {
-            response = e.getMessage();
-          } finally {
-            state = UserState.DEFAULT;
-          }
-          sendMessage = messageService.createMessage(chatId, response);
-        }
-        default -> sendMessage = messageService.createMenuMessage(chatId, "Выберите действие:");
+        sendMessage = messageService.createMessage(chatId, response);
       }
-    } else {
-      sendMessage = messageService.createMessage(chatId, "Доступ ограничен");
+      case INPUT_PROMO -> {
+        try {
+          promoCodeService.checkCorrectPromoCode(text);
+          promoCodeService.checkExistsPromoCode(text);
+          String response = promoCodeRedeemService.redeemPromoCode(
+              text, iggAccountService.getAccounts());
+          sendMessage = messageService.createMessage(chatId, response);
+        } catch (PromoCodeException e) {
+          sendMessage = messageService.createMessage(chatId, e.getMessage());
+        } finally {
+          state = UserState.DEFAULT;
+        }
+      }
+      case DELETE_ID -> {
+        String response;
+        try {
+          response = iggAccountService.deleteAccounts(text);
+        } catch (IggAccountException e) {
+          response = e.getMessage();
+        } finally {
+          state = UserState.DEFAULT;
+        }
+        sendMessage = messageService.createMessage(chatId, response);
+      }
+      default -> sendMessage = idSetReader.getIdSet().contains(message.getChatId())
+          ? messageService.createMenuMessage(chatId, "Выберите действие:")
+          : messageService.createShortMenuMessage(chatId, "Выберите действие:");
     }
 
     return sendMessage;
