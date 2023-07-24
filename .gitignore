@@ -33,3 +33,4 @@ build/
 .vscode/
 
 *.db
+white_set_id.properties

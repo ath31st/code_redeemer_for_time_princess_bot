@@ -44,7 +44,7 @@ public class ButtonService {
     final List<InlineKeyboardButton> inlineKeyboardButtonsRow1 = new ArrayList<>();
 
     InlineKeyboardButton inlineKeyboardButton1 = new InlineKeyboardButton();
-    inlineKeyboardButton1.setText("⌧ " + "Перейти в режим удаления IGG ID");
+    inlineKeyboardButton1.setText("Перейти в режим удаления IGG ID");
     inlineKeyboardButton1.setCallbackData(Link.DELETE_IGG_ID.value);
 
     inlineKeyboardButtonsRow1.add(inlineKeyboardButton1);

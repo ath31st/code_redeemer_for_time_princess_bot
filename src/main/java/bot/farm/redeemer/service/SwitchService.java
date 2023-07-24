@@ -1,5 +1,6 @@
 package bot.farm.redeemer.service;
 
+import bot.farm.redeemer.config.IdSetReader;
 import bot.farm.redeemer.exception.IggAccountException;
 import bot.farm.redeemer.exception.PromoCodeException;
 import bot.farm.redeemer.util.UserState;
@@ -16,12 +17,17 @@ public class SwitchService {
   private final PromoCodeService promoCodeService;
   private final IggAccountService iggAccountService;
   private final PromoCodeRedeemService promoCodeRedeemService;
+  private final IdSetReader idSetReader;
   private UserState state = UserState.DEFAULT;
 
   public SendMessage handleMessage(Message message) {
     SendMessage sendMessage;
     final String chatId = String.valueOf(message.getChatId());
     final String text = message.getText();
+
+    if (!idSetReader.getIdSet().contains(message.getChatId())) {
+      return messageService.createMessage(chatId, "Доступ ограничен");
+    }
 
     switch (state) {
       case INPUT_ID -> {
@@ -64,10 +70,9 @@ public class SwitchService {
 
   public SendMessage handleCallback(CallbackQuery callback) {
     SendMessage sendMessage;
-    Message message = callback.getMessage();
     String chatId = String.valueOf(callback.getMessage().getChatId());
     final String text = callback.getData();
-    //Long userId = callback.getFrom().getId();
+    Long userId = callback.getFrom().getId();
 
     switch (text) {
       case "/input_promo" -> {
