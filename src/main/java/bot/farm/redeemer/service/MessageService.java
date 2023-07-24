@@ -2,6 +2,7 @@ package bot.farm.redeemer.service;
 
 import bot.farm.redeemer.entity.IggAccount;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -32,7 +33,12 @@ public class MessageService {
 
   public SendMessage createListMessageWithDeleteMenuButton(
       String chatId, List<IggAccount> listIggIds) {
-    SendMessage sendMessage = createMessage(chatId, listIggIds.toString());
+    String ids = listIggIds
+        .stream()
+        .map(a -> String.valueOf(a.getIggId()))
+        .collect(Collectors.joining("\n"));
+
+    SendMessage sendMessage = createMessage(chatId, ids);
     InlineKeyboardMarkup inlineKeyboardMarkup =
         buttonService.setInlineKeyMarkup(buttonService.createInlineDeleteButton());
     sendMessage.setReplyMarkup(inlineKeyboardMarkup);

@@ -25,46 +25,48 @@ public class SwitchService {
     final String chatId = String.valueOf(message.getChatId());
     final String text = message.getText();
 
-    if (!idSetReader.getIdSet().contains(message.getChatId())) {
-      return messageService.createMessage(chatId, "Доступ ограничен");
+    if (idSetReader.getIdSet().contains(message.getChatId())) {
+      switch (state) {
+        case INPUT_ID -> {
+          String response;
+          try {
+            response = iggAccountService.saveAccounts(text);
+          } catch (IggAccountException e) {
+            response = e.getMessage();
+          } finally {
+            state = UserState.DEFAULT;
+          }
+          sendMessage = messageService.createMessage(chatId, response);
+        }
+        case INPUT_PROMO -> {
+          try {
+            promoCodeService.savePromoCode(text);
+            String response = promoCodeRedeemService.redeemPromoCode(
+                text, iggAccountService.getAccounts());
+            sendMessage = messageService.createMessage(chatId, response);
+          } catch (PromoCodeException e) {
+            sendMessage = messageService.createMessage(chatId, e.getMessage());
+          } finally {
+            state = UserState.DEFAULT;
+          }
+        }
+        case DELETE_ID -> {
+          String response;
+          try {
+            response = iggAccountService.deleteAccounts(text);
+          } catch (IggAccountException e) {
+            response = e.getMessage();
+          } finally {
+            state = UserState.DEFAULT;
+          }
+          sendMessage = messageService.createMessage(chatId, response);
+        }
+        default -> sendMessage = messageService.createMenuMessage(chatId, "Выберите действие:");
+      }
+    } else {
+      sendMessage = messageService.createMessage(chatId, "Доступ ограничен");
     }
 
-    switch (state) {
-      case INPUT_ID -> {
-        String response;
-        try {
-          response = iggAccountService.saveAccounts(text);
-        } catch (IggAccountException e) {
-          response = e.getMessage();
-        } finally {
-          state = UserState.DEFAULT;
-        }
-        sendMessage = messageService.createMessage(chatId, response);
-      }
-      case INPUT_PROMO -> {
-        try {
-          //promoCodeService.savePromoCode(text);
-          String response = promoCodeRedeemService.redeemPromoCode(text, iggAccountService.getAccounts());
-          sendMessage = messageService.createMessage(chatId, response);
-        } catch (PromoCodeException e) {
-          sendMessage = messageService.createMessage(chatId, e.getMessage());
-        } finally {
-          state = UserState.DEFAULT;
-        }
-      }
-      case DELETE_ID -> {
-        String response;
-        try {
-          response = iggAccountService.deleteAccounts(text);
-        } catch (IggAccountException e) {
-          response = e.getMessage();
-        } finally {
-          state = UserState.DEFAULT;
-        }
-        sendMessage = messageService.createMessage(chatId, response);
-      }
-      default -> sendMessage = messageService.createMenuMessage(chatId, "Выберите действие:");
-    }
     return sendMessage;
   }
 
@@ -72,7 +74,6 @@ public class SwitchService {
     SendMessage sendMessage;
     String chatId = String.valueOf(callback.getMessage().getChatId());
     final String text = callback.getData();
-    Long userId = callback.getFrom().getId();
 
     switch (text) {
       case "/input_promo" -> {
