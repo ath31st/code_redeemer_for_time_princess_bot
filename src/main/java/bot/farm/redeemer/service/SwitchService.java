@@ -40,7 +40,8 @@ public class SwitchService {
         }
         case INPUT_PROMO -> {
           try {
-            promoCodeService.savePromoCode(text);
+            promoCodeService.checkCorrectPromoCode(text);
+            promoCodeService.checkExistsPromoCode(text);
             String response = promoCodeRedeemService.redeemPromoCode(
                 text, iggAccountService.getAccounts());
             sendMessage = messageService.createMessage(chatId, response);

@@ -26,6 +26,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class PromoCodeRedeemService {
   private final ObjectMapper objectMapper;
+  private final PromoCodeService promoCodeService;
   private static final String URL = "https://dut.igg.com/event/code";
 
   public String redeemPromoCode(String promoCode, List<IggAccount> accounts) {
@@ -50,6 +51,14 @@ public class PromoCodeRedeemService {
         HttpEntity entity = response.getEntity();
         String responseString = EntityUtils.toString(entity);
         ApiResponse apiResponse = objectMapper.readValue(responseString, ApiResponse.class);
+
+        // Если промокод истек или уже был применен на аккаунты, то цикл завершается досрочно
+        if (apiResponse.msg().endsWith("[-54]") || apiResponse.msg().endsWith("[-57]")) {
+          activatedIds.clear();
+          othersIds.clear();
+          promoCodeService.savePromoCode(promoCode);
+          break;
+        }
 
         if (apiResponse.code() != 0) {
           othersIds.put(String.valueOf(ia.getIggId()), apiResponse.msg());
@@ -89,7 +98,11 @@ public class PromoCodeRedeemService {
     }
 
     if (activated.isEmpty() && others.isEmpty()) {
-      response = "В базе данных отсутствуют IGG ID. Промокод не был применен.";
+      response = """
+          Применение промокода завершено досрочно по одной из причин:\s
+          1) В базе данных отсутствуют IGG ID.\s
+          2) Время действия прмокода истекло.\s
+          3) Промокод был применен на аккаунты из списка.""";
     }
     return response;
   }
