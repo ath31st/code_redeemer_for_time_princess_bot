@@ -4,6 +4,9 @@ import bot.farm.redeemer.config.IdSetReader;
 import bot.farm.redeemer.exception.IggAccountException;
 import bot.farm.redeemer.exception.PromoCodeException;
 import bot.farm.redeemer.util.UserState;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -18,14 +21,21 @@ public class SwitchService {
   private final IggAccountService iggAccountService;
   private final PromoCodeRedeemService promoCodeRedeemService;
   private final IdSetReader idSetReader;
-  private UserState state = UserState.DEFAULT;
+  // Объявление кеш-хранилища для состояний пользователей
+  private final Map<String, UserState> userStateHashMap
+      = Collections.synchronizedMap(new LinkedHashMap<>() {
+    @Override
+    protected boolean removeEldestEntry(Map.Entry<String, UserState> eldest) {
+      return size() > 10;
+    }
+  });
 
   public SendMessage handleMessage(Message message) {
     SendMessage sendMessage;
     final String chatId = String.valueOf(message.getChatId());
     final String text = message.getText();
 
-    switch (state) {
+    switch (getStateForUser(chatId)) {
       case INPUT_ID -> {
         String response;
         try {
@@ -33,7 +43,7 @@ public class SwitchService {
         } catch (IggAccountException e) {
           response = e.getMessage();
         } finally {
-          state = UserState.DEFAULT;
+          setStateForUser(chatId, UserState.DEFAULT);
         }
         sendMessage = messageService.createMessage(chatId, response);
       }
@@ -47,7 +57,7 @@ public class SwitchService {
         } catch (PromoCodeException e) {
           sendMessage = messageService.createMessage(chatId, e.getMessage());
         } finally {
-          state = UserState.DEFAULT;
+          setStateForUser(chatId, UserState.DEFAULT);
         }
       }
       case DELETE_ID -> {
@@ -57,7 +67,7 @@ public class SwitchService {
         } catch (IggAccountException e) {
           response = e.getMessage();
         } finally {
-          state = UserState.DEFAULT;
+          setStateForUser(chatId, UserState.DEFAULT);
         }
         sendMessage = messageService.createMessage(chatId, response);
       }
@@ -76,12 +86,12 @@ public class SwitchService {
 
     switch (text) {
       case "/input_promo" -> {
-        state = UserState.INPUT_PROMO;
+        setStateForUser(chatId, UserState.INPUT_PROMO);
         sendMessage = messageService.createMessage(chatId,
             "Введите промокод для активации на аккаунты из списка");
       }
       case "/input_igg_id" -> {
-        state = UserState.INPUT_ID;
+        setStateForUser(chatId, UserState.INPUT_ID);
         sendMessage = messageService.createMessage(chatId,
             "Введите ID, которые нужно добавить. "
                 + "ID должны быть разделены запятыми. Пробелы роли не играют.");
@@ -89,16 +99,24 @@ public class SwitchService {
       case "/list_igg_id" -> sendMessage = messageService.createListMessageWithDeleteMenuButton(
           chatId, iggAccountService.getAccounts());
       case "/delete_igg_id" -> {
-        state = UserState.DELETE_ID;
+        setStateForUser(chatId, UserState.DELETE_ID);
         sendMessage = messageService.createMessage(chatId,
             "Введите ID, которые нужно удалить. "
                 + "ID должны быть разделены запятыми. Пробелы роли не играют.");
       }
       default -> {
-        state = UserState.DEFAULT;
+        setStateForUser(chatId, UserState.DEFAULT);
         sendMessage = messageService.createMenuMessage(chatId, "Выберите действие:");
       }
     }
     return sendMessage;
+  }
+
+  private UserState getStateForUser(String chatId) {
+    return userStateHashMap.getOrDefault(chatId, UserState.DEFAULT);
+  }
+
+  private void setStateForUser(String chatId, UserState state) {
+    userStateHashMap.put(chatId, state);
   }
 }
