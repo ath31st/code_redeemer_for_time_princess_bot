@@ -53,7 +53,8 @@ public class IggAccountService {
 
     if (added.isEmpty() && exists.isEmpty()) {
       response = "Введенные IGG ID не были добавлены в базу данных. "
-          + "Проверьте формат ввода, допускаются числа от 2 до 18 знаков";
+          + "Проверьте формат ввода. Числа не должны быть длиннее 18 цифр, язык только eng или rus."
+          + " Пример формата: 12345:rus,67890:eng";
     }
     return response;
   }
@@ -87,7 +88,8 @@ public class IggAccountService {
 
     if (deleted.isEmpty() && absent.isEmpty()) {
       response = "Введенные IGG ID не были удалены из базы данных. "
-          + "Проверьте формат ввода, допускаются числа от 2 до 18 знаков";
+          + "Проверьте формат ввода. Числа не должны быть длиннее 18 цифр, язык только eng или rus."
+          + " Пример формата: 12345:rus,67890:eng";
     }
     return response;
   }
@@ -97,7 +99,7 @@ public class IggAccountService {
   }
 
   private Map<Long, String> processingRawIds(String rawIds) {
-    return Arrays.stream(rawIds.replaceAll(" ", "")
+    return Arrays.stream(rawIds.toLowerCase().replaceAll(" ", "")
             .split(","))
         .filter(s -> s.matches(RegExpression.IGG_ID))
         .map(s -> s.split(":"))

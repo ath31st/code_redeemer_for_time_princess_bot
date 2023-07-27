@@ -93,16 +93,19 @@ public class SwitchService {
       case "/input_igg_id" -> {
         setStateForUser(chatId, UserState.INPUT_ID);
         sendMessage = messageService.createMessage(chatId,
-            "Введите ID, которые нужно добавить. "
-                + "ID должны быть разделены запятыми. Пробелы роли не играют.");
+            "Введите ID и язык(только rus или eng) для аккаунта, которые нужно добавить. "
+                + "ID и язык должны быть разделены двоеточием, а сами записи разделены запятыми. "
+                + "Пробелы роли не играют. Пример формата: 12345:rus,67890:eng");
       }
       case "/list_igg_id" -> sendMessage = messageService.createListMessageWithDeleteMenuButton(
           chatId, iggAccountService.getAccounts());
       case "/delete_igg_id" -> {
         setStateForUser(chatId, UserState.DELETE_ID);
         sendMessage = messageService.createMessage(chatId,
-            "Введите ID, которые нужно удалить. "
-                + "ID должны быть разделены запятыми. Пробелы роли не играют.");
+            "Введите или скопируйте из списка аккаунтов ID и язык(только rus или eng) "
+                + "аккаунтов, которые нужно добавить. "
+                + "ID и язык должны быть разделены двоеточием, а сами записи разделены запятыми. "
+                + "Пробелы роли не играют. Пример формата: 12345:rus,67890:eng");
       }
       default -> {
         setStateForUser(chatId, UserState.DEFAULT);
