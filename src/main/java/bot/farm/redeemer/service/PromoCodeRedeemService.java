@@ -27,7 +27,7 @@ import org.springframework.stereotype.Service;
 public class PromoCodeRedeemService {
   private final ObjectMapper objectMapper;
   private final PromoCodeService promoCodeService;
-  private static final String URL = "https://dut.igg.com/event/code";
+  private static final String URL = "https://dut.igg.com/event/code?lang=";
 
   public String redeemPromoCode(String promoCode, List<IggAccount> accounts) {
     List<String> activatedIds = new ArrayList<>();
@@ -35,7 +35,6 @@ public class PromoCodeRedeemService {
     String trouble = "";
 
     try (CloseableHttpClient httpclient = HttpClients.createDefault()) {
-      HttpPost httpPost = new HttpPost(URL);
 
       Collections.shuffle(accounts);
       for (IggAccount ia : accounts) {
@@ -45,6 +44,7 @@ public class PromoCodeRedeemService {
         params.add(new BasicNameValuePair("username", ""));
         params.add(new BasicNameValuePair("sign", "0"));
 
+        HttpPost httpPost = new HttpPost(URL + ia.getLang());
         httpPost.setEntity(new UrlEncodedFormEntity(params));
 
         HttpResponse response = httpclient.execute(httpPost);

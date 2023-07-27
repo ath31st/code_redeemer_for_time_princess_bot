@@ -6,7 +6,7 @@ import bot.farm.redeemer.util.RegExpression;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,14 +24,15 @@ public class IggAccountService {
     List<String> exists = new ArrayList<>();
     List<String> added = new ArrayList<>();
 
-    for (Long id : processingRawIds(rawIds)) {
-      if (checkExistsId(id)) {
-        exists.add(String.valueOf(id));
+    for (Map.Entry<Long, String> e : processingRawIds(rawIds).entrySet()) {
+      if (checkExistsId(e.getKey())) {
+        exists.add(e.getKey() + ":" + e.getValue());
       } else {
         IggAccount ia = new IggAccount();
-        ia.setIggId(id);
+        ia.setIggId(e.getKey());
+        ia.setLang(e.getValue());
         iggAccountRepositoy.save(ia);
-        added.add(String.valueOf(id));
+        added.add(e.getKey() + ":" + e.getValue());
       }
     }
 
@@ -41,7 +42,7 @@ public class IggAccountService {
   private String prepareResponseAfterSaving(List<String> added, List<String> exists) {
     String response = null;
     if (!added.isEmpty()) {
-      response = "Были добавленые следующие IGG ID: " + String.join(", ", added) + ".";
+      response = "Были добавлены следующие IGG ID: " + String.join(", ", added) + ".";
     }
 
     if (!exists.isEmpty() && response != null) {
@@ -61,12 +62,12 @@ public class IggAccountService {
     List<String> deleted = new ArrayList<>();
     List<String> absent = new ArrayList<>();
 
-    for (Long id : processingRawIds(rawIds)) {
-      if (checkExistsId(id)) {
-        iggAccountRepositoy.deleteById(id);
-        deleted.add(String.valueOf(id));
+    for (Map.Entry<Long, String> e : processingRawIds(rawIds).entrySet()) {
+      if (checkExistsId(e.getKey())) {
+        iggAccountRepositoy.deleteById(e.getKey());
+        deleted.add(e.getKey() + ":" + e.getValue());
       } else {
-        absent.add(String.valueOf(id));
+        absent.add(e.getKey() + ":" + e.getValue());
       }
     }
     return prepareResponseAfterDeleting(deleted, absent);
@@ -95,11 +96,11 @@ public class IggAccountService {
     return iggAccountRepositoy.existsById(id);
   }
 
-  private Set<Long> processingRawIds(String rawIds) {
+  private Map<Long, String> processingRawIds(String rawIds) {
     return Arrays.stream(rawIds.replaceAll(" ", "")
             .split(","))
         .filter(s -> s.matches(RegExpression.IGG_ID))
-        .map(Long::parseLong)
-        .collect(Collectors.toSet());
+        .map(s -> s.split(":"))
+        .collect(Collectors.toMap(s -> Long.valueOf(s[0]), s -> s[1]));
   }
 }

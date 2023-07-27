@@ -15,9 +15,11 @@ public class IggAccount {
   @Id
   @Column(name = "igg_id", nullable = false)
   private Long iggId;
+  @Column(name = "lang", nullable = false)
+  private String lang;
 
   @Override
   public String toString() {
-    return String.valueOf(iggId);
+    return iggId + ":" + lang;
   }
 }

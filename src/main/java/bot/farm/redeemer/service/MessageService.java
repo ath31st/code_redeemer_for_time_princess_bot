@@ -42,7 +42,7 @@ public class MessageService {
       String chatId, List<IggAccount> listIggIds) {
     String ids = listIggIds
         .stream()
-        .map(a -> String.valueOf(a.getIggId()))
+        .map(IggAccount::toString)
         .collect(Collectors.joining("\n"));
 
     SendMessage sendMessage = createMessage(chatId, ids);
