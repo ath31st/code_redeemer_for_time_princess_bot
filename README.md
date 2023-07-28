@@ -7,7 +7,8 @@
 
 ## Что умеет
 
-.....
+Данный бот предназначен для удобной активации промокодов сразу на группу игроков для игры "Time
+Princess"
 
 ## Список команд
 
@@ -26,29 +27,37 @@
 
 ## Как запустить
 
+Перед тем как использовать скрипты, не забудьте заменить их параметры на свои данные (имя и токен
+бота, id телеграм-чатов, которые будут иметь доступ к администраторским функциям (id перечисляются
+через запятую, без пробелов))
 На windows:
+
 ```shell
 git clone https://github.com/ath31st/code_redeemer_for_time_princess_bot
 cd code_redeemer_for_time_princess_bot
 .\mvnw package
 cd target
 New-Item white_set_id.properties
-Set-Content -Path .\white_set_id.properties -Value idSet=12345678
+Set-Content -Path .\white_set_id.properties -Value idSet=YOUR_TELEGRAM_CHAT_ID
 java -jar .\redeemer-0.8.jar --telegram.bot.name=YOUR_BOT_NAME --telegram.bot.token=YOUR_BOT_TOKEN
 ```
+
 На linux:
+
 ```bash
 $ git clone https://github.com/ath31st/code_redeemer_for_time_princess_bot
 $ cd code_redeemer_for_time_princess_bot
 $ mvn package
 $ cd target
 $ touch white_set_id.properties
+$ echo "idSet=YOUR_TELEGRAM_CHAT_ID" > white_set_id.properties
 $ java -jar .\redeemer-0.8.jar --telegram.bot.name=YOUR_BOT_NAME --telegram.bot.token=YOUR_BOT_TOKEN
 ```
 
 ## Technologies used
 
 Versions:
+
 - Java: 17</br>
 - Spring Boot: 2.7.12</br>
 - Telegrambots: 6.7.0</br>
