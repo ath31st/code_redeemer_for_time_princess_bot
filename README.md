@@ -45,13 +45,13 @@ java -jar .\redeemer-0.8.jar --telegram.bot.name=YOUR_BOT_NAME --telegram.bot.to
 На linux:
 
 ```bash
-$ git clone https://github.com/ath31st/code_redeemer_for_time_princess_bot
-$ cd code_redeemer_for_time_princess_bot
-$ mvn package
-$ cd target
-$ touch white_set_id.properties
-$ echo "idSet=YOUR_TELEGRAM_CHAT_ID" > white_set_id.properties
-$ java -jar .\redeemer-0.8.jar --telegram.bot.name=YOUR_BOT_NAME --telegram.bot.token=YOUR_BOT_TOKEN
+git clone https://github.com/ath31st/code_redeemer_for_time_princess_bot
+cd code_redeemer_for_time_princess_bot
+mvn package
+cd target
+touch white_set_id.properties
+echo "idSet=YOUR_TELEGRAM_CHAT_ID" > white_set_id.properties
+java -jar .\redeemer-0.8.jar --telegram.bot.name=YOUR_BOT_NAME --telegram.bot.token=YOUR_BOT_TOKEN
 ```
 
 ## Technologies used
