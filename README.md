@@ -30,9 +30,11 @@
 ```shell
 git clone https://github.com/ath31st/code_redeemer_for_time_princess_bot
 cd code_redeemer_for_time_princess_bot
-mvn package
+.\mvnw package
 cd target
 New-Item white_set_id.properties
+Set-Content -Path .\white_set_id.properties -Value idSet=12345678
+java -jar .\redeemer-0.8.jar --telegram.bot.name=YOUR_BOT_NAME --telegram.bot.token=YOUR_BOT_TOKEN
 ```
 На linux:
 ```bash
@@ -41,6 +43,7 @@ $ cd code_redeemer_for_time_princess_bot
 $ mvn package
 $ cd target
 $ touch white_set_id.properties
+$ java -jar .\redeemer-0.8.jar --telegram.bot.name=YOUR_BOT_NAME --telegram.bot.token=YOUR_BOT_TOKEN
 ```
 
 ## Technologies used

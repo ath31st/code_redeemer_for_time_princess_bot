@@ -10,7 +10,7 @@
     </parent>
     <groupId>bot.farm</groupId>
     <artifactId>redeemer</artifactId>
-    <version>0.8.0-SNAPSHOT</version>
+    <version>0.8</version>
     <name>code_redeemer_for_time_princess_bot</name>
     <description>code_redeemer_for_time_princess_bot</description>
     <packaging>jar</packaging>
