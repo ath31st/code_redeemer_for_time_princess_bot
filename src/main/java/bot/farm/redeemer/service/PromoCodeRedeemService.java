@@ -54,9 +54,7 @@ public class PromoCodeRedeemService {
         ApiResponse apiResponse = objectMapper.readValue(responseString, ApiResponse.class);
 
         // Если промокод истек или уже был применен на аккаунты, то цикл завершается досрочно
-        if (apiResponse.msg().endsWith("[-54]")
-            || apiResponse.msg().endsWith("[-57]")
-            || apiResponse.msg().endsWith("[-51]")) {
+        if (apiResponse.msg().endsWith("[-57]") || apiResponse.msg().endsWith("[-51]")) {
           activatedIds.clear();
           othersIds.clear();
           promoCodeService.savePromoCode(promoCode);
@@ -64,13 +62,13 @@ public class PromoCodeRedeemService {
             trouble = "Такой промокод не существует";
           } else if (apiResponse.msg().endsWith("[-57]")) {
             trouble = "Время действия промокода истекло";
-          } else {
-            trouble = "Промокод уже был применен на аккаунты из списка";
           }
           break;
         }
 
-        if (apiResponse.code() != 0) {
+        if (apiResponse.msg().endsWith("[-54]")) {
+          othersIds.put(String.valueOf(ia.getIggId()), "Промокод был применен самостоятельно");
+        } else if (apiResponse.code() != 0) {
           othersIds.put(String.valueOf(ia.getIggId()), apiResponse.msg());
         } else {
           activatedIds.add(String.valueOf(ia.getIggId()));
@@ -95,7 +93,7 @@ public class PromoCodeRedeemService {
     }
 
     if (!others.isEmpty() && response != null) {
-      response += " Промокод не был применен к следующим аккаунтам по причинам:\n"
+      response += "\nПромокод не был применен к следующим аккаунтам по причинам:\n"
           + others.entrySet()
           .stream()
           .map(e -> e.getKey() + ": " + e.getValue())
