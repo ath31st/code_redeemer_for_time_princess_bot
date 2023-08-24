@@ -57,9 +57,8 @@ public class PromoCodeRedeemService {
         if (apiResponse.msg().endsWith("[-57]") || apiResponse.msg().endsWith("[-51]")) {
           activatedIds.clear();
           othersIds.clear();
-          promoCodeService.savePromoCode(promoCode);
           if (apiResponse.msg().endsWith("[-51]")) {
-            trouble = "Такой промокод не существует";
+            trouble = "Такого промокода не существует";
           } else if (apiResponse.msg().endsWith("[-57]")) {
             trouble = "Время действия промокода истекло";
           }
@@ -78,6 +77,10 @@ public class PromoCodeRedeemService {
         EntityUtils.consume(entity);
       }
 
+      if (!activatedIds.isEmpty()) {
+        // Сохраняем примененный промокод в бд, чтобы избежать повторных попыток активации
+        promoCodeService.savePromoCode(promoCode);
+      }
     } catch (IOException e) {
       e.printStackTrace();
     }
