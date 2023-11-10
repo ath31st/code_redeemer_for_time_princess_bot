@@ -1,6 +1,6 @@
 package bot.farm.redeemer.service;
 
-import bot.farm.redeemer.config.IdSetReader;
+import bot.farm.redeemer.config.ConfigFromFile;
 import bot.farm.redeemer.exception.IggAccountException;
 import bot.farm.redeemer.exception.PromoCodeException;
 import bot.farm.redeemer.util.UserState;
@@ -21,7 +21,7 @@ public class SwitchService {
   private final PromoCodeService promoCodeService;
   private final IggAccountService iggAccountService;
   private final PromoCodeRedeemService promoCodeRedeemService;
-  private final IdSetReader idSetReader;
+  private final ConfigFromFile configFromFile;
   // Объявление кеш-хранилища для состояний пользователей
   private final Map<String, UserState> userStateHashMap
       = Collections.synchronizedMap(new LinkedHashMap<>() {
@@ -83,7 +83,7 @@ public class SwitchService {
         }
         sendMessage = messageService.createMessage(chatId, response);
       }
-      default -> sendMessage = idSetReader.getIdSet().contains(message.getChatId())
+      default -> sendMessage = configFromFile.getIdSet().contains(message.getChatId())
           ? messageService.createMenuMessage(chatId, "Выберите действие:")
           : messageService.createShortMenuMessage(chatId, "Выберите действие:");
     }
