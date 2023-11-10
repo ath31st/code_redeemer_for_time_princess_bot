@@ -12,6 +12,7 @@ public class ButtonService {
   public List<List<InlineKeyboardButton>> createInlineButton() {
     List<List<InlineKeyboardButton>> inlineKeyButtonList = new ArrayList<>();
     List<InlineKeyboardButton> inlineKeyboardButtonsRow1 = new ArrayList<>();
+    List<InlineKeyboardButton> inlineKeyboardButtonsRow2 = new ArrayList<>();
 
     InlineKeyboardButton inlineKeyboardButton1 = new InlineKeyboardButton();
     inlineKeyboardButton1.setText("Ввести промокод");
@@ -25,11 +26,17 @@ public class ButtonService {
     inlineKeyboardButton3.setText("Список IGG ID");
     inlineKeyboardButton3.setCallbackData(Link.LIST_IGG_ID.value);
 
+    InlineKeyboardButton inlineKeyboardButton4 = new InlineKeyboardButton();
+    inlineKeyboardButton4.setText("Добавить ID группы для отчетов");
+    inlineKeyboardButton4.setCallbackData(Link.ADD_GROUP_ID.value);
+
     inlineKeyboardButtonsRow1.add(inlineKeyboardButton1);
     inlineKeyboardButtonsRow1.add(inlineKeyboardButton2);
-    inlineKeyboardButtonsRow1.add(inlineKeyboardButton3);
+    inlineKeyboardButtonsRow2.add(inlineKeyboardButton3);
+    inlineKeyboardButtonsRow2.add(inlineKeyboardButton4);
 
     inlineKeyButtonList.add(inlineKeyboardButtonsRow1);
+    inlineKeyButtonList.add(inlineKeyboardButtonsRow2);
     return inlineKeyButtonList;
   }
 
