@@ -57,6 +57,7 @@ public class SwitchService {
           String response = promoCodeRedeemService.redeemPromoCode(
               text, iggAccountService.getAccounts());
           chatId = getChatIdByOutputState(chatId);
+          response = getResponseByOutputState(response, text, message);
           sendMessage = messageService.createMessage(chatId, response);
         } catch (PromoCodeException e) {
           sendMessage = messageService.createMessage(chatId, e.getMessage());
@@ -84,7 +85,7 @@ public class SwitchService {
   }
 
   public SendMessage handleCallback(CallbackQuery callback) {
-    SendMessage sendMessage = null;
+    SendMessage sendMessage;
     String chatId = String.valueOf(callback.getMessage().getChatId());
     final String text = callback.getData();
 
@@ -113,8 +114,16 @@ public class SwitchService {
       }
       case "/switch_output" -> sendMessage = messageService.createSwitchOutputMenuMessage(chatId,
           "Выберите куда выводить отчеты о применении промокодов:");
-      case "/output_to_private" -> outputSource = Link.OUTPUT_TO_PRIVATE;
-      case "/output_to_group" -> outputSource = Link.OUTPUT_TO_GROUP;
+      case "/output_to_private" -> {
+        outputSource = Link.OUTPUT_TO_PRIVATE;
+        sendMessage = messageService.createMessage(chatId,
+            "Отчеты о применении промокодов будут приходить в личные сообщения отправившим");
+      }
+      case "/output_to_group" -> {
+        outputSource = Link.OUTPUT_TO_GROUP;
+        sendMessage = messageService.createMessage(chatId,
+            "Отчеты о применении промокодов будут приходить в группу");
+      }
       default -> {
         setStateForUser(chatId, UserState.DEFAULT);
         sendMessage = messageService.createMenuMessage(chatId, "Выберите действие:");
@@ -145,5 +154,15 @@ public class SwitchService {
       result = chatId;
     }
     return result;
+  }
+
+  private String getResponseByOutputState(String response, String text, Message message) {
+    if (outputSource == Link.OUTPUT_TO_GROUP) {
+      String nameOrUsername = message.getFrom().getFirstName() != null
+          ? message.getFrom().getFirstName() : message.getFrom().getUserName();
+      response = String.format("Пользователь %s применил промокод %s.%n%s",
+          nameOrUsername, text, response);
+    }
+    return response;
   }
 }
