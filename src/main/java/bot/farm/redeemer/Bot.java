@@ -33,16 +33,18 @@ public class Bot extends TelegramLongPollingBot {
   @Override
   public void onUpdateReceived(Update update) {
     SendMessage sendMsg = null;
-    if (update.hasMessage() && update.getMessage().hasText()) {
+    if (update.hasMessage() && update.getMessage().hasText() && switchService.isUserChat(update)) {
       sendMsg = switchService.handleMessage(update.getMessage());
     }
 
-    if (update.hasCallbackQuery()) {
+    if (update.hasCallbackQuery() && switchService.isUserChat(update)) {
       sendMsg = switchService.handleCallback(update.getCallbackQuery());
     }
 
     try {
-      execute(sendMsg);
+      if (sendMsg != null) {
+        execute(sendMsg);
+      }
     } catch (TelegramApiException e) {
       if (e.getMessage().endsWith("[403] Forbidden: bot was blocked by the user")) {
         log.info("User with chatId {} has received the \"inactive\" status", sendMsg.getChatId());

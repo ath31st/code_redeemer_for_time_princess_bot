@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
+import org.telegram.telegrambots.meta.api.objects.Update;
 
 @Service
 @RequiredArgsConstructor
@@ -74,7 +75,7 @@ public class SwitchService {
       case ADD_GROUP_ID -> {
         String response;
         try {
-          response =
+          response = "";
         } catch (IggAccountException e) {
           response = e.getMessage();
         } finally {
@@ -138,5 +139,11 @@ public class SwitchService {
 
   private void setStateForUser(String chatId, UserState state) {
     userStateHashMap.put(chatId, state);
+  }
+
+  public boolean isUserChat(Update update) {
+    return (update.hasMessage() && update.getMessage().getChat().isUserChat())
+        || (update.hasCallbackQuery()
+        && update.getCallbackQuery().getMessage().getChat().isUserChat());
   }
 }
