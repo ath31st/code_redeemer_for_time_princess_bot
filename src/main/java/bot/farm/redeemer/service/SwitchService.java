@@ -71,6 +71,17 @@ public class SwitchService {
         }
         sendMessage = messageService.createMessage(chatId, response);
       }
+      case ADD_GROUP_ID -> {
+        String response;
+        try {
+          response =
+        } catch (IggAccountException e) {
+          response = e.getMessage();
+        } finally {
+          setStateForUser(chatId, UserState.DEFAULT);
+        }
+        sendMessage = messageService.createMessage(chatId, response);
+      }
       default -> sendMessage = idSetReader.getIdSet().contains(message.getChatId())
           ? messageService.createMenuMessage(chatId, "Выберите действие:")
           : messageService.createShortMenuMessage(chatId, "Выберите действие:");
@@ -106,6 +117,12 @@ public class SwitchService {
                 + "аккаунтов, которые нужно добавить. "
                 + "ID и язык должны быть разделены двоеточием, а сами записи разделены запятыми. "
                 + "Пробелы роли не играют. Пример формата: 12345:rus,67890:eng");
+      }
+      case "/add_group_id" -> {
+        setStateForUser(chatId, UserState.ADD_GROUP_ID);
+        sendMessage = messageService.createMessage(chatId, "Введите ID группы, "
+            + "в которую бот будет отправлять отчет о применении промокодов. Не забудьте "
+            + "добавить бота в эту группу (особых прав не требуется)");
       }
       default -> {
         setStateForUser(chatId, UserState.DEFAULT);
