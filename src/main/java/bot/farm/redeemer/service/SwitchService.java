@@ -3,6 +3,7 @@ package bot.farm.redeemer.service;
 import bot.farm.redeemer.config.ConfigFromFile;
 import bot.farm.redeemer.exception.IggAccountException;
 import bot.farm.redeemer.exception.PromoCodeException;
+import bot.farm.redeemer.util.Link;
 import bot.farm.redeemer.util.UserState;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -30,10 +31,11 @@ public class SwitchService {
       return size() > 10;
     }
   });
+  private Link outputSource = Link.OUTPUT_TO_GROUP;
 
   public SendMessage handleMessage(Message message) {
     SendMessage sendMessage;
-    final String chatId = String.valueOf(message.getChatId());
+    String chatId = String.valueOf(message.getChatId());
     final String text = message.getText();
 
     switch (getStateForUser(chatId)) {
@@ -54,7 +56,8 @@ public class SwitchService {
           promoCodeService.checkExistsPromoCode(text);
           String response = promoCodeRedeemService.redeemPromoCode(
               text, iggAccountService.getAccounts());
-          sendMessage = messageService.createMessage(configFromFile.getIdGroup() != 0 ? String.valueOf(configFromFile.getIdGroup()) : chatId, response);
+          chatId = getChatIdByOutputState(chatId);
+          sendMessage = messageService.createMessage(chatId, response);
         } catch (PromoCodeException e) {
           sendMessage = messageService.createMessage(chatId, e.getMessage());
         } finally {
@@ -81,7 +84,7 @@ public class SwitchService {
   }
 
   public SendMessage handleCallback(CallbackQuery callback) {
-    SendMessage sendMessage;
+    SendMessage sendMessage = null;
     String chatId = String.valueOf(callback.getMessage().getChatId());
     final String text = callback.getData();
 
@@ -110,6 +113,8 @@ public class SwitchService {
       }
       case "/switch_output" -> sendMessage = messageService.createSwitchOutputMenuMessage(chatId,
           "Выберите куда выводить отчеты о применении промокодов:");
+      case "/output_to_private" -> outputSource = Link.OUTPUT_TO_PRIVATE;
+      case "/output_to_group" -> outputSource = Link.OUTPUT_TO_GROUP;
       default -> {
         setStateForUser(chatId, UserState.DEFAULT);
         sendMessage = messageService.createMenuMessage(chatId, "Выберите действие:");
@@ -130,5 +135,15 @@ public class SwitchService {
     return (update.hasMessage() && update.getMessage().getChat().isUserChat())
         || (update.hasCallbackQuery()
         && update.getCallbackQuery().getMessage().getChat().isUserChat());
+  }
+
+  private String getChatIdByOutputState(String chatId) {
+    String result;
+    if (outputSource == Link.OUTPUT_TO_GROUP && configFromFile.getIdGroup() != 0) {
+      result = String.valueOf(configFromFile.getIdGroup());
+    } else {
+      result = chatId;
+    }
+    return result;
   }
 }
