@@ -4,7 +4,7 @@ public enum Link {
   INPUT_PROMO("/input_promo"),
   INPUT_IGG_ID("/input_igg_id"),
   LIST_IGG_ID("/list_igg_id"),
-  ADD_GROUP_ID("/add_group_id"),
+  SWITCH_OUTPUT("/switch_output"),
   DELETE_IGG_ID("/delete_igg_id");
 
   public final String value;

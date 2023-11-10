@@ -13,5 +13,5 @@ public class ConfigFromFile {
   @Value("${idSet}")
   private Set<Long> idSet;
   @Value("${idGroup}")
-  private Long idGroup;
+  private Long idGroup = 0L;
 }

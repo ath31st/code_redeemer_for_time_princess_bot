@@ -54,7 +54,7 @@ public class SwitchService {
           promoCodeService.checkExistsPromoCode(text);
           String response = promoCodeRedeemService.redeemPromoCode(
               text, iggAccountService.getAccounts());
-          sendMessage = messageService.createMessage(chatId, response);
+          sendMessage = messageService.createMessage(configFromFile.getIdGroup() != 0 ? String.valueOf(configFromFile.getIdGroup()) : chatId, response);
         } catch (PromoCodeException e) {
           sendMessage = messageService.createMessage(chatId, e.getMessage());
         } finally {
@@ -65,17 +65,6 @@ public class SwitchService {
         String response;
         try {
           response = iggAccountService.deleteAccounts(text);
-        } catch (IggAccountException e) {
-          response = e.getMessage();
-        } finally {
-          setStateForUser(chatId, UserState.DEFAULT);
-        }
-        sendMessage = messageService.createMessage(chatId, response);
-      }
-      case ADD_GROUP_ID -> {
-        String response;
-        try {
-          response = "";
         } catch (IggAccountException e) {
           response = e.getMessage();
         } finally {
@@ -119,12 +108,8 @@ public class SwitchService {
                 + "ID и язык должны быть разделены двоеточием, а сами записи разделены запятыми. "
                 + "Пробелы роли не играют. Пример формата: 12345:rus,67890:eng");
       }
-      case "/add_group_id" -> {
-        setStateForUser(chatId, UserState.ADD_GROUP_ID);
-        sendMessage = messageService.createMessage(chatId, "Введите ID группы, "
-            + "в которую бот будет отправлять отчет о применении промокодов. Не забудьте "
-            + "добавить бота в эту группу (особых прав не требуется)");
-      }
+      case "/SWITCH_OUTPUT" -> sendMessage = messageService.createMessage(chatId,
+          "Выберите куда выводить отчеты о применении промокодов:");
       default -> {
         setStateForUser(chatId, UserState.DEFAULT);
         sendMessage = messageService.createMenuMessage(chatId, "Выберите действие:");
