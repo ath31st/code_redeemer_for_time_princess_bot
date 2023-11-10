@@ -108,7 +108,7 @@ public class SwitchService {
                 + "ID и язык должны быть разделены двоеточием, а сами записи разделены запятыми. "
                 + "Пробелы роли не играют. Пример формата: 12345:rus,67890:eng");
       }
-      case "/SWITCH_OUTPUT" -> sendMessage = messageService.createMessage(chatId,
+      case "/switch_output" -> sendMessage = messageService.createSwitchOutputMenuMessage(chatId,
           "Выберите куда выводить отчеты о применении промокодов:");
       default -> {
         setStateForUser(chatId, UserState.DEFAULT);

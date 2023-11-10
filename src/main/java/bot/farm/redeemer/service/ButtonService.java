@@ -27,8 +27,8 @@ public class ButtonService {
     inlineKeyboardButton3.setCallbackData(Link.LIST_IGG_ID.value);
 
     InlineKeyboardButton inlineKeyboardButton4 = new InlineKeyboardButton();
-    inlineKeyboardButton4.setText("Добавить ID группы для отчетов");
-    inlineKeyboardButton4.setCallbackData(Link.ADD_GROUP_ID.value);
+    inlineKeyboardButton4.setText("Вывод отчетов");
+    inlineKeyboardButton4.setCallbackData(Link.SWITCH_OUTPUT.value);
 
     inlineKeyboardButtonsRow1.add(inlineKeyboardButton1);
     inlineKeyboardButtonsRow1.add(inlineKeyboardButton2);
@@ -69,6 +69,25 @@ public class ButtonService {
     inlineKeyboardButton1.setCallbackData(Link.INPUT_PROMO.value);
 
     inlineKeyboardButtonsRow1.add(inlineKeyboardButton1);
+
+    inlineKeyButtonList.add(inlineKeyboardButtonsRow1);
+    return inlineKeyButtonList;
+  }
+
+  public List<List<InlineKeyboardButton>> createSwitchOutputButton() {
+    final List<List<InlineKeyboardButton>> inlineKeyButtonList = new ArrayList<>();
+    final List<InlineKeyboardButton> inlineKeyboardButtonsRow1 = new ArrayList<>();
+
+    InlineKeyboardButton inlineKeyboardButton1 = new InlineKeyboardButton();
+    inlineKeyboardButton1.setText("В приват");
+    inlineKeyboardButton1.setCallbackData(Link.OUTPUT_TO_PRIVATE.value);
+
+    InlineKeyboardButton inlineKeyboardButton2 = new InlineKeyboardButton();
+    inlineKeyboardButton2.setText("В группу");
+    inlineKeyboardButton2.setCallbackData(Link.OUTPUT_TO_GROUP.value);
+
+    inlineKeyboardButtonsRow1.add(inlineKeyboardButton1);
+    inlineKeyboardButtonsRow1.add(inlineKeyboardButton2);
 
     inlineKeyButtonList.add(inlineKeyboardButtonsRow1);
     return inlineKeyButtonList;

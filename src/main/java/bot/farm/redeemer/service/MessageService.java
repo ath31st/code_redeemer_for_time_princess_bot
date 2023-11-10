@@ -38,6 +38,14 @@ public class MessageService {
     return sendMessage;
   }
 
+  public SendMessage createSwitchOutputMenuMessage(String chatId, String message) {
+    SendMessage sendMessage = createMessage(chatId, message);
+    InlineKeyboardMarkup inlineKeyboardMarkup
+        = buttonService.setInlineKeyMarkup(buttonService.createSwitchOutputButton());
+    sendMessage.setReplyMarkup(inlineKeyboardMarkup);
+    return sendMessage;
+  }
+
   public SendMessage createListMessageWithDeleteMenuButton(
       String chatId, List<IggAccount> listIggIds) {
     String ids = listIggIds
