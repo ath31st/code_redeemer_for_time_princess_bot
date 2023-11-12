@@ -1,6 +1,7 @@
 package bot.farm.redeemer;
 
 import bot.farm.redeemer.service.SwitchService;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,6 +17,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 public class Bot extends TelegramLongPollingBot {
   @Value("${telegram.bot.name}")
   private String botName;
+  @Getter
   @Value("${telegram.bot.token}")
   private String botToken;
   private final SwitchService switchService;
@@ -23,11 +25,6 @@ public class Bot extends TelegramLongPollingBot {
   @Override
   public String getBotUsername() {
     return botName;
-  }
-
-  @Override
-  public String getBotToken() {
-    return botToken;
   }
 
   @Override
