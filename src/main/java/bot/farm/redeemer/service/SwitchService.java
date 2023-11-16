@@ -118,16 +118,19 @@ public class SwitchService {
                 + "Пробелы роли не играют. Пример формата: 12345:rus,67890:eng");
       }
       case "/duplicate_output" -> sendMessage = messageService.createSwitchOutputMenuMessage(chatId,
-          "Выберите куда выводить отчеты о применении промокодов:");
+          "Включить или отключить дополнительный вывод информации об успешном "
+              + "применении промокода в группу:");
       case "/duplicate_in_group_off" -> {
         outputSource = Link.DUPLICATE_IN_GROUP_OFF;
         sendMessage = messageService.createMessage(chatId,
-            "Отчеты о применении промокодов будут приходить в личные сообщения отправившим");
+            "Отчеты о применении промокодов будут приходить только в личные "
+                + "сообщения отправившим");
       }
       case "/duplicate_in_group_on" -> {
         outputSource = Link.DUPLICATE_IN_GROUP_ON;
         sendMessage = messageService.createMessage(chatId,
-            "Отчеты о применении промокодов будут приходить в группу");
+            "Полный отчет о применении промокода будет приходить в личные сообщения "
+                + "применившим. Дополнительно будет выводиться короткий отчет в группу");
       }
       default -> {
         setStateForUser(chatId, UserState.DEFAULT);
