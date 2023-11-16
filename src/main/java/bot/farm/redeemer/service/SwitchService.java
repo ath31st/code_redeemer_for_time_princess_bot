@@ -157,7 +157,7 @@ public class SwitchService {
   private String getResponseForGroupChat(String text, Message message) {
     String nameOrUsername = message.getFrom().getFirstName() != null
         ? message.getFrom().getFirstName() : message.getFrom().getUserName();
-    return String.format("Гордость гильдии %s, успешно применил промокод %s.",
+    return String.format("Гордость гильдии %s успешно применил(а) промокод %s.",
         nameOrUsername, text);
   }
 }
