@@ -1,6 +1,8 @@
 package bot.farm.redeemer;
 
 import bot.farm.redeemer.service.SwitchService;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,22 +31,24 @@ public class Bot extends TelegramLongPollingBot {
 
   @Override
   public void onUpdateReceived(Update update) {
-    SendMessage sendMsg = null;
+    List<SendMessage> messages = new ArrayList<>();
     if (update.hasMessage() && update.getMessage().hasText() && switchService.isUserChat(update)) {
-      sendMsg = switchService.handleMessage(update.getMessage());
+      messages.addAll(switchService.handleMessage(update.getMessage()));
     }
 
     if (update.hasCallbackQuery() && switchService.isUserChat(update)) {
-      sendMsg = switchService.handleCallback(update.getCallbackQuery());
+      messages.add(switchService.handleCallback(update.getCallbackQuery()));
     }
 
     try {
-      if (sendMsg != null) {
-        execute(sendMsg);
+      if (!messages.isEmpty()) {
+        for (SendMessage m : messages) {
+          execute(m);
+        }
       }
     } catch (TelegramApiException e) {
       if (e.getMessage().endsWith("[403] Forbidden: bot was blocked by the user")) {
-        log.info("User with chatId {} has received the \"inactive\" status", sendMsg.getChatId());
+        log.info("Bot was blocked user from list receivers. Error text: {}", e.getMessage());
       } else {
         log.error(e.getMessage());
       }

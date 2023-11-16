@@ -160,8 +160,8 @@ public class SwitchService {
     if (outputSource == Link.OUTPUT_TO_GROUP) {
       String nameOrUsername = message.getFrom().getFirstName() != null
           ? message.getFrom().getFirstName() : message.getFrom().getUserName();
-      response = String.format("Пользователь %s применил промокод %s.%n%s",
-          nameOrUsername, text, response);
+      response = String.format("Пользователь %s успешно применил промокод %s.",
+          nameOrUsername, text);
     }
     return response;
   }
