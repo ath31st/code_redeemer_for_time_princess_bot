@@ -5,8 +5,10 @@ import bot.farm.redeemer.exception.IggAccountException;
 import bot.farm.redeemer.exception.PromoCodeException;
 import bot.farm.redeemer.util.Link;
 import bot.farm.redeemer.util.UserState;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -33,8 +35,8 @@ public class SwitchService {
   });
   private Link outputSource = Link.OUTPUT_TO_GROUP;
 
-  public SendMessage handleMessage(Message message) {
-    SendMessage sendMessage;
+  public List<SendMessage> handleMessage(Message message) {
+    List<SendMessage> messages = new ArrayList<>();
     String chatId = String.valueOf(message.getChatId());
     final String text = message.getText();
 
@@ -48,7 +50,7 @@ public class SwitchService {
         } finally {
           setStateForUser(chatId, UserState.DEFAULT);
         }
-        sendMessage = messageService.createMessage(chatId, response);
+        messages.add(messageService.createMessage(chatId, response));
       }
       case INPUT_PROMO -> {
         try {
@@ -56,11 +58,14 @@ public class SwitchService {
           promoCodeService.checkExistsPromoCode(text);
           String response = promoCodeRedeemService.redeemPromoCode(
               text, iggAccountService.getAccounts());
-          chatId = getChatIdByOutputState(chatId);
-          response = getResponseByOutputState(response, text, message);
-          sendMessage = messageService.createMessage(chatId, response);
+          messages.add(messageService.createMessage(chatId, response));
+          if (outputSource == Link.OUTPUT_TO_GROUP && configFromFile.getIdGroup() != 0) {
+            String groupId = String.valueOf(configFromFile.getIdGroup());
+            String groupResp = getResponseForGroupChat(text, message);
+            messages.add(messageService.createMessage(groupId, groupResp));
+          }
         } catch (PromoCodeException e) {
-          sendMessage = messageService.createMessage(chatId, e.getMessage());
+          messages.add(messageService.createMessage(chatId, e.getMessage()));
         } finally {
           setStateForUser(chatId, UserState.DEFAULT);
         }
@@ -74,14 +79,14 @@ public class SwitchService {
         } finally {
           setStateForUser(chatId, UserState.DEFAULT);
         }
-        sendMessage = messageService.createMessage(chatId, response);
+        messages.add(messageService.createMessage(chatId, response));
       }
-      default -> sendMessage = configFromFile.getIdSet().contains(message.getChatId())
+      default -> messages.add(configFromFile.getIdSet().contains(message.getChatId())
           ? messageService.createMenuMessage(chatId, "Выберите действие:")
-          : messageService.createShortMenuMessage(chatId, "Выберите действие:");
+          : messageService.createShortMenuMessage(chatId, "Выберите действие:"));
     }
 
-    return sendMessage;
+    return messages;
   }
 
   public SendMessage handleCallback(CallbackQuery callback) {
@@ -146,23 +151,10 @@ public class SwitchService {
         && update.getCallbackQuery().getMessage().getChat().isUserChat());
   }
 
-  private String getChatIdByOutputState(String chatId) {
-    String result;
-    if (outputSource == Link.OUTPUT_TO_GROUP && configFromFile.getIdGroup() != 0) {
-      result = String.valueOf(configFromFile.getIdGroup());
-    } else {
-      result = chatId;
-    }
-    return result;
-  }
-
-  private String getResponseByOutputState(String response, String text, Message message) {
-    if (outputSource == Link.OUTPUT_TO_GROUP) {
-      String nameOrUsername = message.getFrom().getFirstName() != null
-          ? message.getFrom().getFirstName() : message.getFrom().getUserName();
-      response = String.format("Пользователь %s успешно применил промокод %s.",
-          nameOrUsername, text);
-    }
-    return response;
+  private String getResponseForGroupChat(String text, Message message) {
+    String nameOrUsername = message.getFrom().getFirstName() != null
+        ? message.getFrom().getFirstName() : message.getFrom().getUserName();
+    return String.format("Пользователь %s успешно применил промокод %s.",
+        nameOrUsername, text);
   }
 }
