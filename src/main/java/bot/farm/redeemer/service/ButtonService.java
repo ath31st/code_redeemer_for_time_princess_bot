@@ -27,8 +27,8 @@ public class ButtonService {
     inlineKeyboardButton3.setCallbackData(Link.LIST_IGG_ID.value);
 
     InlineKeyboardButton inlineKeyboardButton4 = new InlineKeyboardButton();
-    inlineKeyboardButton4.setText("Вывод отчетов");
-    inlineKeyboardButton4.setCallbackData(Link.SWITCH_OUTPUT.value);
+    inlineKeyboardButton4.setText("Доп. вывод отчетов в группу");
+    inlineKeyboardButton4.setCallbackData(Link.DUPLICATE_OUTPUT.value);
 
     inlineKeyboardButtonsRow1.add(inlineKeyboardButton1);
     inlineKeyboardButtonsRow1.add(inlineKeyboardButton2);
@@ -79,12 +79,12 @@ public class ButtonService {
     final List<InlineKeyboardButton> inlineKeyboardButtonsRow1 = new ArrayList<>();
 
     InlineKeyboardButton inlineKeyboardButton1 = new InlineKeyboardButton();
-    inlineKeyboardButton1.setText("В приват");
-    inlineKeyboardButton1.setCallbackData(Link.OUTPUT_TO_PRIVATE.value);
+    inlineKeyboardButton1.setText("Отключить");
+    inlineKeyboardButton1.setCallbackData(Link.DUPLICATE_IN_GROUP_OFF.value);
 
     InlineKeyboardButton inlineKeyboardButton2 = new InlineKeyboardButton();
-    inlineKeyboardButton2.setText("В группу");
-    inlineKeyboardButton2.setCallbackData(Link.OUTPUT_TO_GROUP.value);
+    inlineKeyboardButton2.setText("Включить");
+    inlineKeyboardButton2.setCallbackData(Link.DUPLICATE_IN_GROUP_ON.value);
 
     inlineKeyboardButtonsRow1.add(inlineKeyboardButton1);
     inlineKeyboardButtonsRow1.add(inlineKeyboardButton2);

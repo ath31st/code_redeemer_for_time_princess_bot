@@ -33,7 +33,7 @@ public class SwitchService {
       return size() > 10;
     }
   });
-  private Link outputSource = Link.OUTPUT_TO_GROUP;
+  private Link outputSource = Link.DUPLICATE_IN_GROUP_ON;
 
   public List<SendMessage> handleMessage(Message message) {
     List<SendMessage> messages = new ArrayList<>();
@@ -59,7 +59,7 @@ public class SwitchService {
           String response = promoCodeRedeemService.redeemPromoCode(
               text, iggAccountService.getAccounts());
           messages.add(messageService.createMessage(chatId, response));
-          if (outputSource == Link.OUTPUT_TO_GROUP && configFromFile.getIdGroup() != 0) {
+          if (outputSource == Link.DUPLICATE_IN_GROUP_ON && configFromFile.getIdGroup() != 0) {
             String groupId = String.valueOf(configFromFile.getIdGroup());
             String groupResp = getResponseForGroupChat(text, message);
             messages.add(messageService.createMessage(groupId, groupResp));
@@ -117,15 +117,15 @@ public class SwitchService {
                 + "ID и язык должны быть разделены двоеточием, а сами записи разделены запятыми. "
                 + "Пробелы роли не играют. Пример формата: 12345:rus,67890:eng");
       }
-      case "/switch_output" -> sendMessage = messageService.createSwitchOutputMenuMessage(chatId,
+      case "/duplicate_output" -> sendMessage = messageService.createSwitchOutputMenuMessage(chatId,
           "Выберите куда выводить отчеты о применении промокодов:");
-      case "/output_to_private" -> {
-        outputSource = Link.OUTPUT_TO_PRIVATE;
+      case "/duplicate_in_group_off" -> {
+        outputSource = Link.DUPLICATE_IN_GROUP_OFF;
         sendMessage = messageService.createMessage(chatId,
             "Отчеты о применении промокодов будут приходить в личные сообщения отправившим");
       }
-      case "/output_to_group" -> {
-        outputSource = Link.OUTPUT_TO_GROUP;
+      case "/duplicate_in_group_on" -> {
+        outputSource = Link.DUPLICATE_IN_GROUP_ON;
         sendMessage = messageService.createMessage(chatId,
             "Отчеты о применении промокодов будут приходить в группу");
       }
@@ -154,7 +154,7 @@ public class SwitchService {
   private String getResponseForGroupChat(String text, Message message) {
     String nameOrUsername = message.getFrom().getFirstName() != null
         ? message.getFrom().getFirstName() : message.getFrom().getUserName();
-    return String.format("Пользователь %s успешно применил промокод %s.",
+    return String.format("Гордость гильдии %s, успешно применил промокод %s.",
         nameOrUsername, text);
   }
 }
