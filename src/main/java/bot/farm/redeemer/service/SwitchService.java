@@ -4,6 +4,7 @@ import bot.farm.redeemer.config.ConfigFromFile;
 import bot.farm.redeemer.exception.IggAccountException;
 import bot.farm.redeemer.exception.PromoCodeException;
 import bot.farm.redeemer.util.Link;
+import bot.farm.redeemer.util.Phrases;
 import bot.farm.redeemer.util.UserState;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -82,8 +83,8 @@ public class SwitchService {
         messages.add(messageService.createMessage(chatId, response));
       }
       default -> messages.add(configFromFile.getIdSet().contains(message.getChatId())
-          ? messageService.createMenuMessage(chatId, "Выберите действие:")
-          : messageService.createShortMenuMessage(chatId, "Выберите действие:"));
+          ? messageService.createMenuMessage(chatId, Phrases.CHOOSE_ACTION.getText())
+          : messageService.createShortMenuMessage(chatId, Phrases.CHOOSE_ACTION.getText()));
     }
 
     return messages;
@@ -97,44 +98,33 @@ public class SwitchService {
     switch (text) {
       case "/input_promo" -> {
         setStateForUser(chatId, UserState.INPUT_PROMO);
-        sendMessage = messageService.createMessage(chatId,
-            "Введите промокод для активации на аккаунты из списка");
+        sendMessage = messageService.createMessage(chatId, Phrases.ENTER_PROMO_CODE.getText());
       }
       case "/input_igg_id" -> {
         setStateForUser(chatId, UserState.INPUT_ID);
-        sendMessage = messageService.createMessage(chatId,
-            "Введите ID и язык(только rus или eng) для аккаунта, которые нужно добавить. "
-                + "ID и язык должны быть разделены двоеточием, а сами записи разделены запятыми. "
-                + "Пробелы роли не играют. Пример формата: 12345:rus,67890:eng");
+        sendMessage = messageService.createMessage(chatId, Phrases.ENTER_ACCOUNT_DETAILS.getText());
       }
       case "/list_igg_id" -> sendMessage = messageService.createListMessageWithDeleteMenuButton(
           chatId, iggAccountService.getAccounts());
       case "/delete_igg_id" -> {
         setStateForUser(chatId, UserState.DELETE_ID);
         sendMessage = messageService.createMessage(chatId,
-            "Введите или скопируйте из списка аккаунтов ID и язык(только rus или eng) "
-                + "аккаунтов, которые нужно добавить. "
-                + "ID и язык должны быть разделены двоеточием, а сами записи разделены запятыми. "
-                + "Пробелы роли не играют. Пример формата: 12345:rus,67890:eng");
+            Phrases.ENTER_ACCOUNT_DETAILS_FOR_DELETE.getText());
       }
       case "/duplicate_output" -> sendMessage = messageService.createSwitchOutputMenuMessage(chatId,
-          "Включить или отключить дополнительный вывод информации об успешном "
-              + "применении промокода в группу:");
+          Phrases.ENABLE_DISABLE_INFO.getText());
       case "/duplicate_in_group_off" -> {
         outputSource = Link.DUPLICATE_IN_GROUP_OFF;
-        sendMessage = messageService.createMessage(chatId,
-            "Отчеты о применении промокодов будут приходить только в личные "
-                + "сообщения отправившим");
+        sendMessage = messageService.createMessage(chatId, Phrases.PROMO_REPORTS_INFO.getText());
       }
       case "/duplicate_in_group_on" -> {
         outputSource = Link.DUPLICATE_IN_GROUP_ON;
         sendMessage = messageService.createMessage(chatId,
-            "Полный отчет о применении промокода будет приходить в личные сообщения "
-                + "применившим. Дополнительно будет выводиться короткий отчет в группу");
+            Phrases.FULL_PROMO_REPORTS_INFO.getText());
       }
       default -> {
         setStateForUser(chatId, UserState.DEFAULT);
-        sendMessage = messageService.createMenuMessage(chatId, "Выберите действие:");
+        sendMessage = messageService.createMenuMessage(chatId, Phrases.CHOOSE_ACTION.getText());
       }
     }
     return sendMessage;

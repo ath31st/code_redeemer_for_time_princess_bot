@@ -1,5 +1,8 @@
 package bot.farm.redeemer.util;
 
+import lombok.Getter;
+
+@Getter
 public enum Phrases {
   CHOOSE_ACTION("Выберите действие:"),
   ENTER_PROMO_CODE("Введите промокод для активации на аккаунты из списка"),
@@ -24,7 +27,4 @@ public enum Phrases {
     this.text = text;
   }
 
-  public String getText() {
-    return text;
-  }
 }
