@@ -39,7 +39,7 @@ cd code_redeemer_for_time_princess_bot
 cd target
 New-Item white_set_id.properties
 Set-Content -Path .\white_set_id.properties -Value idSet=YOUR_TELEGRAM_CHAT_ID
-java -jar .\redeemer-0.8.jar --telegram.bot.name=YOUR_BOT_NAME --telegram.bot.token=YOUR_BOT_TOKEN
+java -jar .\redeemer-{version}.jar --telegram.bot.name=YOUR_BOT_NAME --telegram.bot.token=YOUR_BOT_TOKEN
 ```
 
 На linux:
@@ -51,13 +51,14 @@ mvn package
 cd target
 touch white_set_id.properties
 echo "idSet=YOUR_TELEGRAM_CHAT_ID" > white_set_id.properties
-java -jar .\redeemer-0.8.jar --telegram.bot.name=YOUR_BOT_NAME --telegram.bot.token=YOUR_BOT_TOKEN
+java -jar .\redeemer-{version}.jar --telegram.bot.name=YOUR_BOT_NAME --telegram.bot.token=YOUR_BOT_TOKEN
 ```
 
 ## Technologies used
 
 Versions:
 
+- Application version: 0.9.1
 - Java: 17</br>
 - Spring Boot: 2.7.12</br>
 - Telegrambots: 6.7.0</br>
