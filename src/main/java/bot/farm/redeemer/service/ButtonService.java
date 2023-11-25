@@ -10,9 +10,9 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 @Service
 public class ButtonService {
   public List<List<InlineKeyboardButton>> createInlineButton() {
-    List<List<InlineKeyboardButton>> inlineKeyButtonList = new ArrayList<>();
-    List<InlineKeyboardButton> inlineKeyboardButtonsRow1 = new ArrayList<>();
-    List<InlineKeyboardButton> inlineKeyboardButtonsRow2 = new ArrayList<>();
+    final List<List<InlineKeyboardButton>> inlineKeyButtonList = new ArrayList<>();
+    final List<InlineKeyboardButton> inlineKeyboardButtonsRow1 = new ArrayList<>();
+    final List<InlineKeyboardButton> inlineKeyboardButtonsRow2 = new ArrayList<>();
 
     InlineKeyboardButton inlineKeyboardButton1 = new InlineKeyboardButton();
     inlineKeyboardButton1.setText("Ввести промокод");

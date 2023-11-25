@@ -13,6 +13,14 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+/**
+ * Telegram bot implementation using TelegramLongPollingBot.
+ * This class represents a Telegram bot that extends TelegramLongPollingBot,
+ * handling updates and messages through the onUpdateReceived method. It is
+ * annotated as a Spring Service and uses the SwitchService for handling messages.
+ *
+ * @see org.telegram.telegrambots.bots.TelegramLongPollingBot
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
