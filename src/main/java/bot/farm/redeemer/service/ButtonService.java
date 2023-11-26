@@ -1,5 +1,13 @@
 package bot.farm.redeemer.service;
 
+import static bot.farm.redeemer.util.Phrases.B_ADDITIONAL_OUTPUT;
+import static bot.farm.redeemer.util.Phrases.B_DELETE_MODE;
+import static bot.farm.redeemer.util.Phrases.B_ENTER_IGG_ID;
+import static bot.farm.redeemer.util.Phrases.B_ENTER_PROMO_CODE;
+import static bot.farm.redeemer.util.Phrases.B_LIST_IGG_ID;
+import static bot.farm.redeemer.util.Phrases.B_OFF;
+import static bot.farm.redeemer.util.Phrases.B_ON;
+
 import bot.farm.redeemer.util.Link;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,19 +23,19 @@ public class ButtonService {
     final List<InlineKeyboardButton> inlineKeyboardButtonsRow2 = new ArrayList<>();
 
     InlineKeyboardButton inlineKeyboardButton1 = new InlineKeyboardButton();
-    inlineKeyboardButton1.setText("Ввести промокод");
+    inlineKeyboardButton1.setText(B_ENTER_PROMO_CODE.getText());
     inlineKeyboardButton1.setCallbackData(Link.INPUT_PROMO.value);
 
     InlineKeyboardButton inlineKeyboardButton2 = new InlineKeyboardButton();
-    inlineKeyboardButton2.setText("Ввести IGG ID");
+    inlineKeyboardButton2.setText(B_ENTER_IGG_ID.getText());
     inlineKeyboardButton2.setCallbackData(Link.INPUT_IGG_ID.value);
 
     InlineKeyboardButton inlineKeyboardButton3 = new InlineKeyboardButton();
-    inlineKeyboardButton3.setText("Список IGG ID");
+    inlineKeyboardButton3.setText(B_LIST_IGG_ID.getText());
     inlineKeyboardButton3.setCallbackData(Link.LIST_IGG_ID.value);
 
     InlineKeyboardButton inlineKeyboardButton4 = new InlineKeyboardButton();
-    inlineKeyboardButton4.setText("Доп. вывод отчетов в группу");
+    inlineKeyboardButton4.setText(B_ADDITIONAL_OUTPUT.getText());
     inlineKeyboardButton4.setCallbackData(Link.DUPLICATE_OUTPUT.value);
 
     inlineKeyboardButtonsRow1.add(inlineKeyboardButton1);
@@ -51,7 +59,7 @@ public class ButtonService {
     final List<InlineKeyboardButton> inlineKeyboardButtonsRow1 = new ArrayList<>();
 
     InlineKeyboardButton inlineKeyboardButton1 = new InlineKeyboardButton();
-    inlineKeyboardButton1.setText("Перейти в режим удаления IGG ID");
+    inlineKeyboardButton1.setText(B_DELETE_MODE.getText());
     inlineKeyboardButton1.setCallbackData(Link.DELETE_IGG_ID.value);
 
     inlineKeyboardButtonsRow1.add(inlineKeyboardButton1);
@@ -65,7 +73,7 @@ public class ButtonService {
     final List<InlineKeyboardButton> inlineKeyboardButtonsRow1 = new ArrayList<>();
 
     InlineKeyboardButton inlineKeyboardButton1 = new InlineKeyboardButton();
-    inlineKeyboardButton1.setText("Ввести промокод");
+    inlineKeyboardButton1.setText(B_ENTER_PROMO_CODE.getText());
     inlineKeyboardButton1.setCallbackData(Link.INPUT_PROMO.value);
 
     inlineKeyboardButtonsRow1.add(inlineKeyboardButton1);
@@ -79,11 +87,11 @@ public class ButtonService {
     final List<InlineKeyboardButton> inlineKeyboardButtonsRow1 = new ArrayList<>();
 
     InlineKeyboardButton inlineKeyboardButton1 = new InlineKeyboardButton();
-    inlineKeyboardButton1.setText("Отключить");
+    inlineKeyboardButton1.setText(B_OFF.getText());
     inlineKeyboardButton1.setCallbackData(Link.DUPLICATE_IN_GROUP_OFF.value);
 
     InlineKeyboardButton inlineKeyboardButton2 = new InlineKeyboardButton();
-    inlineKeyboardButton2.setText("Включить");
+    inlineKeyboardButton2.setText(B_ON.getText());
     inlineKeyboardButton2.setCallbackData(Link.DUPLICATE_IN_GROUP_ON.value);
 
     inlineKeyboardButtonsRow1.add(inlineKeyboardButton1);
