@@ -15,6 +15,9 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
+/**
+ * Service for preparing control buttons and menus
+ */
 @Service
 public class ButtonService {
   public List<List<InlineKeyboardButton>> createInlineButton() {
