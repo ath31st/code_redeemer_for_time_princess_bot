@@ -1,7 +1,7 @@
 package bot.farm.redeemer.service;
 
 import bot.farm.redeemer.entity.IggAccount;
-import bot.farm.redeemer.repository.IggAccountRepositoy;
+import bot.farm.redeemer.repository.IggAccountRepository;
 import bot.farm.redeemer.util.RegExpression;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,10 +14,10 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class IggAccountService {
-  private final IggAccountRepositoy iggAccountRepositoy;
+  private final IggAccountRepository iggAccountRepository;
 
   public List<IggAccount> getAccounts() {
-    return iggAccountRepositoy.findAll();
+    return iggAccountRepository.findAll();
   }
 
   public String saveAccounts(String rawIds) {
@@ -31,7 +31,7 @@ public class IggAccountService {
         IggAccount ia = new IggAccount();
         ia.setIggId(e.getKey());
         ia.setLang(e.getValue());
-        iggAccountRepositoy.save(ia);
+        iggAccountRepository.save(ia);
         added.add(e.getKey() + ":" + e.getValue());
       }
     }
@@ -65,7 +65,7 @@ public class IggAccountService {
 
     for (Map.Entry<Long, String> e : processingRawIds(rawIds).entrySet()) {
       if (checkExistsId(e.getKey())) {
-        iggAccountRepositoy.deleteById(e.getKey());
+        iggAccountRepository.deleteById(e.getKey());
         deleted.add(e.getKey() + ":" + e.getValue());
       } else {
         absent.add(e.getKey() + ":" + e.getValue());
@@ -95,7 +95,7 @@ public class IggAccountService {
   }
 
   private boolean checkExistsId(Long id) {
-    return iggAccountRepositoy.existsById(id);
+    return iggAccountRepository.existsById(id);
   }
 
   private Map<Long, String> processingRawIds(String rawIds) {

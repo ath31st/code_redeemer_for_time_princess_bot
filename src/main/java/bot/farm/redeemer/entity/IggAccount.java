@@ -7,6 +7,9 @@ import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * Entity class representing an IGG (Indie Gala Gift) account.
+ */
 @Entity
 @Setter
 @Getter
