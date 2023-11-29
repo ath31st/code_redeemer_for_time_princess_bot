@@ -11,15 +11,32 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+/**
+ * Service class for managing IGG (Indie Gala Gift) accounts.
+ * This service provides methods for retrieving, saving, and deleting IggAccount entities.
+ * It includes functionality to process raw input, validate IGG IDs, and generate response
+ * messages based on the outcome of operations.
+ */
 @Service
 @RequiredArgsConstructor
 public class IggAccountService {
   private final IggAccountRepository iggAccountRepository;
 
+  /**
+   * Retrieves a list of all IGG accounts from the database.
+   *
+   * @return List of IggAccount entities.
+   */
   public List<IggAccount> getAccounts() {
     return iggAccountRepository.findAll();
   }
 
+  /**
+   * Saves IGG accounts based on the provided raw input.
+   *
+   * @param rawIds Raw input containing IGG IDs and languages.
+   * @return A response message indicating which accounts were added and which already existed.
+   */
   public String saveAccounts(String rawIds) {
     List<String> exists = new ArrayList<>();
     List<String> added = new ArrayList<>();
@@ -59,6 +76,12 @@ public class IggAccountService {
     return response;
   }
 
+  /**
+   * Deletes IGG accounts based on the provided raw input.
+   *
+   * @param rawIds Raw input containing IGG IDs and languages.
+   * @return A response message indicating which accounts were deleted and which were absent.
+   */
   public String deleteAccounts(String rawIds) {
     List<String> deleted = new ArrayList<>();
     List<String> absent = new ArrayList<>();
