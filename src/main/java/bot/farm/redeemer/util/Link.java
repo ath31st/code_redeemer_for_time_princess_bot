@@ -1,5 +1,10 @@
 package bot.farm.redeemer.util;
 
+/**
+ * Enumeration of links used in the bot's functionality.
+ * Each link corresponds to a specific action or operation in the bot. The enum
+ * provides constant values for various endpoints or actions.
+ */
 public enum Link {
   INPUT_PROMO("/input_promo"),
   INPUT_IGG_ID("/input_igg_id"),
