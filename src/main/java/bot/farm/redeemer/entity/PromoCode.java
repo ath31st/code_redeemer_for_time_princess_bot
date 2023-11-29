@@ -10,6 +10,10 @@ import javax.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * Entity class representing a promotional code.
+ * Each instance corresponds to a unique promo code.
+ */
 @Entity
 @Setter
 @Getter

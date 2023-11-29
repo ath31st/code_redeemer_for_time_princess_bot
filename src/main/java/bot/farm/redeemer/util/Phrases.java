@@ -2,6 +2,9 @@ package bot.farm.redeemer.util;
 
 import lombok.Getter;
 
+/**
+ * Enumeration representing phrases used in the bot messages.
+ */
 @Getter
 public enum Phrases {
   CHOOSE_ACTION("Выберите действие:"),
