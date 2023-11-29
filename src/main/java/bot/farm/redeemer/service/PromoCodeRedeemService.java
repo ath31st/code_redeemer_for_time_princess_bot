@@ -22,6 +22,10 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.springframework.stereotype.Service;
 
+/**
+ * Service class for redeeming promotional codes on a list of IggAccounts.
+ * It interacts with an external service to redeem the promo code for each account.
+ */
 @Service
 @RequiredArgsConstructor
 public class PromoCodeRedeemService {
@@ -29,6 +33,13 @@ public class PromoCodeRedeemService {
   private final PromoCodeService promoCodeService;
   private static final String URL = "https://dut.igg.com/event/code?lang=";
 
+  /**
+   * Redeems a promotional code on a list of IggAccounts.
+   *
+   * @param promoCode The promotional code to redeem.
+   * @param accounts  The list of IggAccounts on which the promo code will be redeemed.
+   * @return A string containing the result of the redemption process.
+   */
   public String redeemPromoCode(String promoCode, List<IggAccount> accounts) {
     List<String> activatedIds = new ArrayList<>();
     Map<String, String> othersIds = new HashMap<>();
@@ -87,6 +98,14 @@ public class PromoCodeRedeemService {
     return prepareResponseAfterRedeeming(activatedIds, othersIds, trouble);
   }
 
+  /**
+   * Prepares the response after redeeming the promotional code.
+   *
+   * @param activated A list of IGG IDs that were successfully activated.
+   * @param others    A map of IGG IDs and reasons for which the promo code was not applied.
+   * @param trouble   A string describing the reason for early completion.
+   * @return A string containing the detailed response after redeeming the promotional code.
+   */
   private String prepareResponseAfterRedeeming(
       List<String> activated, Map<String, String> others, String trouble) {
     String response = null;
