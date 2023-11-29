@@ -20,6 +20,11 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
  */
 @Service
 public class ButtonService {
+  /**
+   * Creates an inline button list for entering promo code and IGG ID.
+   *
+   * @return The list of inline buttons.
+   */
   public List<List<InlineKeyboardButton>> createInlineButton() {
     final List<List<InlineKeyboardButton>> inlineKeyButtonList = new ArrayList<>();
     final List<InlineKeyboardButton> inlineKeyboardButtonsRow1 = new ArrayList<>();
@@ -51,12 +56,23 @@ public class ButtonService {
     return inlineKeyButtonList;
   }
 
+  /**
+   * Sets the inline keyboard markup using the provided inline button list.
+   *
+   * @param inlineList The list of inline buttons.
+   * @return The configured inline keyboard markup.
+   */
   public InlineKeyboardMarkup setInlineKeyMarkup(List<List<InlineKeyboardButton>> inlineList) {
     InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
     inlineKeyboardMarkup.setKeyboard(inlineList);
     return inlineKeyboardMarkup;
   }
 
+  /**
+   * Creates an inline button list for entering delete mode.
+   *
+   * @return The list of inline buttons.
+   */
   public List<List<InlineKeyboardButton>> createInlineDeleteButton() {
     final List<List<InlineKeyboardButton>> inlineKeyButtonList = new ArrayList<>();
     final List<InlineKeyboardButton> inlineKeyboardButtonsRow1 = new ArrayList<>();
@@ -71,6 +87,11 @@ public class ButtonService {
     return inlineKeyButtonList;
   }
 
+  /**
+   * Creates a short menu with an inline button for entering promo code.
+   *
+   * @return The list of inline buttons.
+   */
   public List<List<InlineKeyboardButton>> createInlineShortMenuButton() {
     final List<List<InlineKeyboardButton>> inlineKeyButtonList = new ArrayList<>();
     final List<InlineKeyboardButton> inlineKeyboardButtonsRow1 = new ArrayList<>();
@@ -85,6 +106,11 @@ public class ButtonService {
     return inlineKeyButtonList;
   }
 
+  /**
+   * Creates an inline button list for switching output options.
+   *
+   * @return The list of inline buttons.
+   */
   public List<List<InlineKeyboardButton>> createSwitchOutputButton() {
     final List<List<InlineKeyboardButton>> inlineKeyButtonList = new ArrayList<>();
     final List<InlineKeyboardButton> inlineKeyboardButtonsRow1 = new ArrayList<>();
