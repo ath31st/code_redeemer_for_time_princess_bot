@@ -18,6 +18,9 @@ import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
+/**
+ * Service class for handling user messages and callbacks, and managing user states.
+ */
 @Service
 @RequiredArgsConstructor
 public class SwitchService {
@@ -36,6 +39,12 @@ public class SwitchService {
   });
   private Link outputSource = Link.DUPLICATE_IN_GROUP_ON;
 
+  /**
+   * Handles incoming messages from users.
+   *
+   * @param message The incoming message.
+   * @return List of SendMessages in response to the user.
+   */
   public List<SendMessage> handleMessage(Message message) {
     List<SendMessage> messages = new ArrayList<>();
     String chatId = String.valueOf(message.getChatId());
@@ -90,6 +99,12 @@ public class SwitchService {
     return messages;
   }
 
+  /**
+   * Handles incoming callback queries from users.
+   *
+   * @param callback The incoming callback query.
+   * @return SendMessage in response to the callback.
+   */
   public SendMessage handleCallback(CallbackQuery callback) {
     SendMessage sendMessage;
     String chatId = String.valueOf(callback.getMessage().getChatId());
@@ -138,6 +153,12 @@ public class SwitchService {
     userStateHashMap.put(chatId, state);
   }
 
+  /**
+   * Checks if the update corresponds to a user chat.
+   *
+   * @param update The incoming update.
+   * @return True if the update is from a user chat, false otherwise.
+   */
   public boolean isUserChat(Update update) {
     return (update.hasMessage() && update.getMessage().getChat().isUserChat())
         || (update.hasCallbackQuery()
