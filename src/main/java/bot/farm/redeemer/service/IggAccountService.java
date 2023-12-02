@@ -1,5 +1,12 @@
 package bot.farm.redeemer.service;
 
+import static bot.farm.redeemer.util.Phrases.ADDED_IGG_IDS;
+import static bot.farm.redeemer.util.Phrases.DATABASE_ALREADY_CONTAINS;
+import static bot.farm.redeemer.util.Phrases.DATABASE_MISSING;
+import static bot.farm.redeemer.util.Phrases.INVALID_INPUT_FORMAT;
+import static bot.farm.redeemer.util.Phrases.REMOVED_IGG_IDS;
+import static bot.farm.redeemer.util.Phrases.UNABLE_TO_REMOVE;
+
 import bot.farm.redeemer.entity.IggAccount;
 import bot.farm.redeemer.repository.IggAccountRepository;
 import bot.farm.redeemer.util.RegExpression;
@@ -66,19 +73,17 @@ public class IggAccountService {
   private String prepareResponseAfterSaving(List<String> added, List<String> exists) {
     String response = null;
     if (!added.isEmpty()) {
-      response = "Были добавлены следующие IGG ID: " + String.join(", ", added) + ".";
+      response = ADDED_IGG_IDS.getText() + String.join(", ", added) + ".";
     }
 
     if (!exists.isEmpty() && response != null) {
-      response += " В базе данных уже находятся: " + String.join(", ", exists) + ".";
+      response += " " + DATABASE_ALREADY_CONTAINS.getText() + String.join(", ", exists) + ".";
     } else if (!exists.isEmpty()) {
-      response = "В базе данных уже находятся: " + String.join(", ", exists) + ".";
+      response = DATABASE_ALREADY_CONTAINS.getText() + String.join(", ", exists) + ".";
     }
 
     if (added.isEmpty() && exists.isEmpty()) {
-      response = "Введенные IGG ID не были добавлены в базу данных. "
-          + "Проверьте формат ввода. Числа не должны быть длиннее 18 цифр, язык только eng или rus."
-          + " Пример формата: 12345:rus,67890:eng";
+      response = INVALID_INPUT_FORMAT.getText();
     }
     return response;
   }
@@ -114,19 +119,17 @@ public class IggAccountService {
   private String prepareResponseAfterDeleting(List<String> deleted, List<String> absent) {
     String response = null;
     if (!deleted.isEmpty()) {
-      response = "Были удалены следующие IGG ID: " + String.join(", ", deleted) + ".";
+      response = REMOVED_IGG_IDS.getText() + String.join(", ", deleted) + ".";
     }
 
     if (!absent.isEmpty() && response != null) {
-      response += " В базе данных отсутствуют: " + String.join(", ", absent) + ".";
+      response += " " + DATABASE_MISSING.getText() + String.join(", ", absent) + ".";
     } else if (!absent.isEmpty()) {
-      response = "В базе данных отсутствуют: " + String.join(", ", absent) + ".";
+      response = DATABASE_MISSING.getText() + String.join(", ", absent) + ".";
     }
 
     if (deleted.isEmpty() && absent.isEmpty()) {
-      response = "Введенные IGG ID не были удалены из базы данных. "
-          + "Проверьте формат ввода. Числа не должны быть длиннее 18 цифр, язык только eng или rus."
-          + " Пример формата: 12345:rus,67890:eng";
+      response = UNABLE_TO_REMOVE.getText();
     }
     return response;
   }
