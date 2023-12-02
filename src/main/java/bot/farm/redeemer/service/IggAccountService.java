@@ -56,6 +56,13 @@ public class IggAccountService {
     return prepareResponseAfterSaving(added, exists);
   }
 
+  /**
+   * Prepares a response message after saving IGG IDs.
+   *
+   * @param added  List of IGG IDs that were successfully added.
+   * @param exists List of IGG IDs that already exist in the database.
+   * @return The response message.
+   */
   private String prepareResponseAfterSaving(List<String> added, List<String> exists) {
     String response = null;
     if (!added.isEmpty()) {
@@ -97,6 +104,13 @@ public class IggAccountService {
     return prepareResponseAfterDeleting(deleted, absent);
   }
 
+  /**
+   * Prepares a response message after deleting IGG IDs.
+   *
+   * @param deleted List of IGG IDs that were successfully deleted.
+   * @param absent  List of IGG IDs that were not found in the database.
+   * @return The response message.
+   */
   private String prepareResponseAfterDeleting(List<String> deleted, List<String> absent) {
     String response = null;
     if (!deleted.isEmpty()) {
@@ -117,10 +131,22 @@ public class IggAccountService {
     return response;
   }
 
+  /**
+   * Checks if an IGG ID exists in the database.
+   *
+   * @param id The IGG ID to check.
+   * @return {@code true} if the IGG ID exists, {@code false} otherwise.
+   */
   private boolean checkExistsId(Long id) {
     return iggAccountRepository.existsById(id);
   }
 
+  /**
+   * Process a raw input string containing IGG IDs and their corresponding languages.
+   *
+   * @param rawIds The raw input string.
+   * @return A map of IGG IDs and their corresponding languages.
+   */
   private Map<Long, String> processingRawIds(String rawIds) {
     return Arrays.stream(rawIds.toLowerCase().replaceAll(" ", "")
             .split(","))
