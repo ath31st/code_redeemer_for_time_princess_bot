@@ -145,10 +145,22 @@ public class SwitchService {
     return sendMessage;
   }
 
+  /**
+   * Retrieve the state associated with a specific user.
+   *
+   * @param chatId The chat ID of the user.
+   * @return The user's state or DEFAULT if not found.
+   */
   private UserState getStateForUser(String chatId) {
     return userStateHashMap.getOrDefault(chatId, UserState.DEFAULT);
   }
 
+  /**
+   * Set the state for a specific user.
+   *
+   * @param chatId The chat ID of the user.
+   * @param state  The state to set for the user.
+   */
   private void setStateForUser(String chatId, UserState state) {
     userStateHashMap.put(chatId, state);
   }
@@ -165,6 +177,13 @@ public class SwitchService {
         && update.getCallbackQuery().getMessage().getChat().isUserChat());
   }
 
+  /**
+   * Generate a response message for a group chat when a user successfully redeems a promo code.
+   *
+   * @param text    The promo code that was redeemed.
+   * @param message The message object containing information about the user.
+   * @return The generated response message.
+   */
   private String getResponseForGroupChat(String text, Message message) {
     String nameOrUsername = message.getFrom().getFirstName() != null
         ? message.getFrom().getFirstName() : message.getFrom().getUserName();
