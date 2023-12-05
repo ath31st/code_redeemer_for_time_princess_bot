@@ -1,5 +1,12 @@
 package bot.farm.redeemer.service;
 
+import static bot.farm.redeemer.util.Phrases.PROMO_CODE_ACTIVATED;
+import static bot.farm.redeemer.util.Phrases.PROMO_CODE_EXPIRED;
+import static bot.farm.redeemer.util.Phrases.PROMO_CODE_NOT_APPLIED;
+import static bot.farm.redeemer.util.Phrases.PROMO_CODE_NOT_EXIST;
+import static bot.farm.redeemer.util.Phrases.PROMO_CODE_PREMATURELY_ENDED;
+import static bot.farm.redeemer.util.Phrases.PROMO_CODE_SELF_APPLIED;
+
 import bot.farm.redeemer.dto.ApiResponse;
 import bot.farm.redeemer.entity.IggAccount;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -69,15 +76,15 @@ public class PromoCodeRedeemService {
           activatedIds.clear();
           othersIds.clear();
           if (apiResponse.msg().endsWith("[-51]")) {
-            trouble = "Такого промокода не существует";
+            trouble = PROMO_CODE_NOT_EXIST.getText();
           } else if (apiResponse.msg().endsWith("[-57]")) {
-            trouble = "Время действия промокода истекло";
+            trouble = PROMO_CODE_EXPIRED.getText();
           }
           break;
         }
 
         if (apiResponse.msg().endsWith("[-54]")) {
-          othersIds.put(String.valueOf(ia.getIggId()), "Промокод был применен самостоятельно");
+          othersIds.put(String.valueOf(ia.getIggId()), PROMO_CODE_SELF_APPLIED.getText());
         } else if (apiResponse.code() != 0) {
           othersIds.put(String.valueOf(ia.getIggId()), apiResponse.msg());
         } else {
@@ -110,18 +117,17 @@ public class PromoCodeRedeemService {
       List<String> activated, Map<String, String> others, String trouble) {
     String response = null;
     if (!activated.isEmpty()) {
-      response = "Промокод был активирован на следующие IGG ID:\n"
-          + String.join("\n", activated);
+      response = PROMO_CODE_ACTIVATED.getText() + String.join("\n", activated);
     }
 
     if (!others.isEmpty() && response != null) {
-      response += "\nПромокод не был применен к следующим аккаунтам по причинам:\n"
+      response += "\n" + PROMO_CODE_NOT_APPLIED.getText()
           + others.entrySet()
           .stream()
           .map(e -> e.getKey() + ": " + e.getValue())
           .collect(Collectors.joining("\n"));
     } else if (!others.isEmpty()) {
-      response = "Промокод не был применен к следующим аккаунтам по причинам:\n"
+      response = PROMO_CODE_NOT_APPLIED.getText()
           + others.entrySet()
           .stream()
           .map(e -> e.getKey() + ": " + e.getValue())
@@ -129,7 +135,7 @@ public class PromoCodeRedeemService {
     }
 
     if (activated.isEmpty() && others.isEmpty()) {
-      response = "Применение промокода завершено досрочно по причине:\n" + trouble;
+      response = PROMO_CODE_PREMATURELY_ENDED.getText() + trouble;
     }
     return response;
   }

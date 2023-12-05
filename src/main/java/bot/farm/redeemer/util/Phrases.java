@@ -44,7 +44,15 @@ public enum Phrases {
   DATABASE_MISSING("В базе данных отсутствуют: "),
   UNABLE_TO_REMOVE("Введенные IGG ID не были удалены из базы данных. Проверьте формат ввода. "
       + "Числа не должны быть длиннее 18 цифр, язык только eng или rus. "
-      + FORMAT_EXAMPLE.getText());
+      + FORMAT_EXAMPLE.getText()),
+
+  // promo code service
+  PROMO_CODE_ACTIVATED("Промокод был активирован на следующие IGG ID:\n"),
+  PROMO_CODE_NOT_APPLIED("Промокод не был применен к следующим аккаунтам по причинам:\n"),
+  PROMO_CODE_PREMATURELY_ENDED("Применение промокода завершено досрочно по причине:\n"),
+  PROMO_CODE_SELF_APPLIED("Промокод был применен самостоятельно"),
+  PROMO_CODE_EXPIRED("Время действия промокода истекло"),
+  PROMO_CODE_NOT_EXIST("Такого промокода не существует");
 
   private final String text;
 
