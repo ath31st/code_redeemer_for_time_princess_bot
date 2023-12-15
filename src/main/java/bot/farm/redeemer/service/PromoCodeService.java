@@ -1,5 +1,8 @@
 package bot.farm.redeemer.service;
 
+import static bot.farm.redeemer.util.Phrases.INVALID_PROMO_CODE_FORMAT;
+import static bot.farm.redeemer.util.Phrases.PROMO_CODE_ALREADY_EXISTS;
+
 import bot.farm.redeemer.entity.PromoCode;
 import bot.farm.redeemer.exception.PromoCodeException;
 import bot.farm.redeemer.repository.PromoCodeRepository;
@@ -34,8 +37,7 @@ public class PromoCodeService {
    */
   public void checkExistsPromoCode(String code) {
     if (promoCodeRepository.existsByCodeIgnoreCase(code)) {
-      throw new PromoCodeException(
-          "Такой промокод уже существует в базе данных и был применен на аккаунты");
+      throw new PromoCodeException(PROMO_CODE_ALREADY_EXISTS.getText());
     }
   }
 
@@ -47,8 +49,7 @@ public class PromoCodeService {
    */
   public void checkCorrectPromoCode(String code) {
     if (!code.matches(RegExpression.PROMO_CODE)) {
-      throw new PromoCodeException(
-          "Неправильный формат промокода. Он должен состоять только из английских букв и цифр");
+      throw new PromoCodeException(INVALID_PROMO_CODE_FORMAT.getText());
     }
   }
 }

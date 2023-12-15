@@ -52,7 +52,10 @@ public enum Phrases {
   PROMO_CODE_PREMATURELY_ENDED("Применение промокода завершено досрочно по причине:\n"),
   PROMO_CODE_SELF_APPLIED("Промокод был применен самостоятельно"),
   PROMO_CODE_EXPIRED("Время действия промокода истекло"),
-  PROMO_CODE_NOT_EXIST("Такого промокода не существует");
+  PROMO_CODE_NOT_EXIST("Такого промокода не существует"),
+  PROMO_CODE_ALREADY_EXISTS("Такой промокод уже существует в базе данных и был применен на аккаунты"),
+  INVALID_PROMO_CODE_FORMAT("Неправильный формат промокода. "
+      + "Он должен состоять только из английских букв и цифр");
 
   private final String text;
 
